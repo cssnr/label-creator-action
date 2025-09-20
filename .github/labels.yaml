@@ -1,6 +1,11 @@
-source:
-  color: fbca04
-  description: Source modification
+workflows:
+  color: ffffff
+  description: Workflows modification
+
 documentation:
   color: 0075ca
   description: Documentation updates
+
+source:
+  color: fbca04
+  description: Source modification

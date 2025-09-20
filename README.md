@@ -19,6 +19,8 @@
 
 # Label Creator Action
 
+- [Features](#Features)
+  - [Planned](#Planned)
 - [Configuration](#Configuration)
 - [Inputs](#Inputs)
   - [Permissions](#Permissions)
@@ -69,7 +71,8 @@ If you are using [actions/labeler](https://github.com/actions/labeler) it will c
 
 By default, the file is sourced from `.github/labels.yaml` but can be placed anywhere.
 
-This includes remote files. Example: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labeler.yaml
+This includes remote files.  
+Example: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml
 
 ## Inputs
 
@@ -83,15 +86,15 @@ All inputs are optional.
 | summary | `true`                | Add Summary to Job \*        |
 |  token  | `${{ github.token }}` | GitHub Access Token PAT [^1] |
 
-Note: the `files` does not have to exist locally. It will be fetched from the API if it does not exist.
-This avoids the need to run `actions/checkout` before running this action when using a local file.
+This action is designed to work on the `pull_request_target` trigger.  
+Example workflow: [.github/workflows/release.yaml](https://github.com/cssnr/label-creator-action/blob/master/.github/workflows/release.yaml)
 
 ```yaml
 - name: 'Label Creator'
   uses: cssnr/label-creator-action@v1
 ```
 
-See the [Examples](#examples) for usage.
+See the [Examples](#examples) for usage options.
 
 ### Permissions
 
@@ -143,7 +146,7 @@ With a remote file.
 - name: 'Label Creator'
   uses: cssnr/label-creator-action@v1
   with:
-    url: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labeler.yaml
+    url: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml
 ```
 
 With an inline JSON string.
@@ -154,8 +157,9 @@ With an inline JSON string.
   with:
     json: |
       {
-        "source": {"color": "fbca04", "description": "Source modification"},
-        "documentation": {"color": "0075ca", "description": "Documentation updates"}
+        "workflows": {"color": "ffffff", "description": "Workflows modification"},
+        "documentation": {"color": "0075ca", "description": "Documentation updates"},
+        "source": {"color": "fbca04", "description": "Source modification"}
       }
 ```
 
