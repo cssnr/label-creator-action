@@ -29,12 +29,12 @@
 - [Contributing](#Contributing)
 
 Automatically Create or Update Labels to ensure they exist and are synchronized.
-Works from a centralized remote configuration file, local file or inline config.
+Works from a centralized remote configuration file/url, local file or inline config.
 
 This works by fetching the configuration file and current repository labels.
 It loops through the configuration and checks if the provided labels exist.
-If the label exist, it makes sure the color and description match, otherwise updates it.
 If the label does not exist, it creates a new label with the name, color and description.
+If the label exist, it makes sure the color and description matches, otherwise updates them.
 
 ```yaml
 - name: 'Label Creator Action'
@@ -75,15 +75,16 @@ This includes remote files. Example: https://raw.githubusercontent.com/cssnr/lab
 
 All inputs are optional.
 
-|  Input  | Default               | Input&nbsp;Description             |
-| :-----: | :-------------------- | :--------------------------------- |
-|  file   | `.github/labels.yaml` | Configuration file location or URL |
-|  json   | -                     | Inline Configuration JSON string   |
-| summary | `true`                | Add Summary to Job \*              |
-|  token  | `${{ github.token }}` | GitHub Access Token PAT [^1]       |
+|  Input  | Default               | Input&nbsp;Description       |
+| :-----: | :-------------------- | :--------------------------- |
+|  file   | `.github/labels.yaml` | Configuration file path      |
+|   url   | -                     | Configuration file URL       |
+|  json   | -                     | Configuration JSON string    |
+| summary | `true`                | Add Summary to Job \*        |
+|  token  | `${{ github.token }}` | GitHub Access Token PAT [^1] |
 
-If the `file` is a full URL, it will be fetched remotely.
-This allows maintaining a centralized configuration file.
+Note: the `files` does not have to exist locally. It will be fetched from the API if it does not exist.
+This avoids the need to run `actions/checkout` before running this action when using a local file.
 
 ```yaml
 - name: 'Label Creator Action'
@@ -98,7 +99,7 @@ This action requires the following permissions:
 
 ```yaml
 permissions:
-  contents: write
+  pull-requests: write
 ```
 
 Permissions documentation for [Workflows](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token) and [Actions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication).
@@ -140,7 +141,7 @@ With a remote file.
 - name: 'Label Creator Action'
   uses: cssnr/label-creator-action@master
   with:
-    file: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labeler.yaml
+    url: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labeler.yaml
 ```
 
 With an inline JSON string.
@@ -151,8 +152,8 @@ With an inline JSON string.
   with:
     json: |
       {
-        "source": {"color": "FBCA04", "description": "Source modifications"},
-        "documentation": {"color": "0052CC", "description": "Documentation updates"}
+        "source": {"color": "fbca04", "description": "Source modification"},
+        "documentation": {"color": "0075ca", "description": "Documentation updates"}
       }
 ```
 

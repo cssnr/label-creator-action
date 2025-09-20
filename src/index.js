@@ -24,13 +24,18 @@ const Labeler = require('./labeler')
         core.endGroup() // Inputs
 
         // Config
-        let config = await getConfig(inputs)
+        const labeler = new Labeler(inputs.token)
+        let config = await getConfig(inputs, labeler)
         console.log('config:', config)
+        if (!config) {
+            core.error('Must provide a file, url, or json input.')
+            core.setFailed('No configuration file found.')
+            return
+        }
 
         // Labels
         core.startGroup('Labels')
         console.log('github.context.repo:', github.context.repo)
-        const labeler = new Labeler(inputs.token)
         const labels = await labeler.listLabels()
         console.log('labels.length:', labels.length)
         console.log(labels)
@@ -139,23 +144,30 @@ async function addSummary(inputs, config, created, updated) {
 /**
  * Get Config
  * @param {Inputs} inputs
+ * @param {Labeler} labeler
  * @return {Object}
  */
-async function getConfig(inputs) {
+async function getConfig(inputs, labeler) {
     if (inputs.json) {
         console.log('Processing JSON:', inputs.json)
         return JSON.parse(inputs.json)
-    } else if (fs.existsSync(inputs.file)) {
-        console.log('Processing File:', inputs.file)
-        const file = fs.readFileSync(inputs.file, 'utf8')
-        return YAML.parse(file)
-    } else {
-        const url = new URL(inputs.file)
-        console.log('Processing URL:', url.href)
-        const response = await fetch(url)
+    } else if (inputs.url) {
+        console.log('Processing URL:', inputs.url)
+        const response = await fetch(inputs.url)
         if (!response.ok) throw new Error(response.statusText)
         const text = await response.text()
         return YAML.parse(text)
+    } else if (inputs.file) {
+        console.log('Processing File:', inputs.file)
+        if (fs.existsSync(inputs.file)) {
+            console.log('Local file found, reading file content.')
+            const file = fs.readFileSync(inputs.file, 'utf8')
+            return YAML.parse(file)
+        } else {
+            console.log('File not found, get content from API.')
+            const text = await labeler.getContent(inputs.file)
+            return YAML.parse(text)
+        }
     }
 }
 
@@ -163,6 +175,7 @@ async function getConfig(inputs) {
  * Get Inputs
  * @typedef {Object} Inputs
  * @property {String|undefined} file
+ * @property {String|undefined} url
  * @property {String|undefined} json
  * @property {Boolean} summary
  * @property {String} token
@@ -171,6 +184,7 @@ async function getConfig(inputs) {
 function getInputs() {
     return {
         file: core.getInput('file'),
+        url: core.getInput('url'),
         json: core.getInput('json'),
         summary: core.getBooleanInput('summary'),
         token: core.getInput('token', { required: true }),

@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: write
+      pull-requests: write
 
     steps:
       - name: "Checkout"
@@ -37,45 +37,35 @@ jobs:
           cat "${GITHUB_EVENT_PATH}"
 
       - name: "1 - Test File"
-        id: test1
         uses: ./
         with:
           file: ".github/labels.yaml"
 
-      - name: "1 - Verify File"
-        run: |
-          echo "created: ${{ steps.test1.outputs.created }}"
-          echo "updated: ${{ steps.test1.outputs.updated }}"
+      - name: "Delete Local File"
+        run: rm -rf .github/labels.yaml
 
-      #- name: "2 - Test URL"
-      #  id: test1
-      #  uses: ./
-      #  with:
-      #    file: "https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml"
+      - name: "2 - Test API"
+        uses: ./
+        with:
+          file: ".github/labels.yaml"
 
-      #- name: "2 - Verify URL"
-      #  run: |
-      #    echo "created: ${{ steps.test1.outputs.created }}"
-      #    echo "updated: ${{ steps.test1.outputs.updated }}"
+      - name: "3 - Test URL"
+        uses: ./
+        with:
+          url: "https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml"
 
-      #- name: "3 - Test JSON"
-      #  id: test2
-      #  uses: ./
-      #  with:
-      #    file: "https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml"
-      #    json: |
-      #      {
-      #        "source": {"color": "FBCA04", "description": "Source modifications"},
-      #        "documentation": {"color": "0052CC", "description": "Documentation updates"}
-      #      }
+      - name: "4 - Test JSON"
+        uses: ./
+        with:
+          file: "https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml"
+          json: |
+            {
+              "source": {"color": "fbca04", "description": "Source modification"},
+              "documentation": {"color": "0075ca", "description": "Documentation updates"}
+            }
 
-      #- name: "3 - Verify JSON"
-      #  run: |
-      #    echo "created: ${{ steps.test2.outputs.created }}"
-      #    echo "updated: ${{ steps.test2.outputs.updated }}"
-
-      #- name: "Schedule Failure Notification"
-      #  if: ${{ failure() && github.event_name == 'schedule' }}
-      #  uses: sarisia/actions-status-discord@v1
-      #  with:
-      #    webhook: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: "Schedule Failure Notification"
+        if: ${{ failure() && github.event_name == 'schedule' }}
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
