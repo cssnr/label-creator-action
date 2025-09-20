@@ -1,5 +1,5 @@
 name: "Label Creator"
-description: "Automatically Create or Update Labels to ensure they exist and are synchronized. Works from a centralized remote configuration file, local file or inline config."
+description: "Automatically Create or Update Labels to ensure they exist and are synchronized using a centralized configuration file."
 author: "Shane"
 branding:
   icon: "tag"
