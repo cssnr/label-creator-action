@@ -149,8 +149,8 @@ With an inline JSON string.
   with:
     json: |
       {
-        "source": {"color": "FBCA04", "description": "Source modifications"},
-        "documentation": {"color": "0052CC", "description": "Documentation updates"}
+        "source": {"color": "fbca04", "description": "Source modification"},
+        "documentation": {"color": "0075ca", "description": "Documentation updates"}
       }
 ```
 

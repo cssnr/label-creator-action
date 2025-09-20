@@ -60,8 +60,8 @@ jobs:
           file: "https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml"
           json: |
             {
-              "source": {"color": "FBCA04", "description": "Source modifications"},
-              "documentation": {"color": "0052CC", "description": "Documentation updates"}
+              "source": {"color": "fbca04", "description": "Source modification"},
+              "documentation": {"color": "0075ca", "description": "Documentation updates"}
             }
 
       - name: "Schedule Failure Notification"
