@@ -19,6 +19,8 @@
 
 # Label Creator Action
 
+- [Features](#Features)
+  - [Planned](#Planned)
 - [Configuration](#Configuration)
 - [Inputs](#Inputs)
   - [Permissions](#Permissions)
