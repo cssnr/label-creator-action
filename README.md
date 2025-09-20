@@ -69,7 +69,8 @@ If you are using [actions/labeler](https://github.com/actions/labeler) it will c
 
 By default, the file is sourced from `.github/labels.yaml` but can be placed anywhere.
 
-This includes remote files. Example: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml
+This includes remote files.  
+Example: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml
 
 ## Inputs
 
@@ -83,7 +84,7 @@ All inputs are optional.
 | summary | `true`                | Add Summary to Job \*        |
 |  token  | `${{ github.token }}` | GitHub Access Token PAT [^1] |
 
-This action is designed to work on the `pull_request_target` trigger.
+This action is designed to work on the `pull_request_target` trigger.  
 Example workflow: [.github/workflows/release.yaml](https://github.com/cssnr/label-creator-action/blob/master/.github/workflows/release.yaml)
 
 ```yaml
@@ -91,7 +92,7 @@ Example workflow: [.github/workflows/release.yaml](https://github.com/cssnr/labe
   uses: cssnr/label-creator-action@v1
 ```
 
-See the [Examples](#examples) for usage.
+See the [Examples](#examples) for usage options.
 
 ### Permissions
 
