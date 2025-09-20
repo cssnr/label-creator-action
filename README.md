@@ -75,15 +75,13 @@ This includes remote files. Example: https://raw.githubusercontent.com/cssnr/lab
 
 All inputs are optional.
 
-|  Input  | Default               | Input&nbsp;Description             |
-| :-----: | :-------------------- | :--------------------------------- |
-|  file   | `.github/labels.yaml` | Configuration file location or URL |
-|  json   | -                     | Inline Configuration JSON string   |
-| summary | `true`                | Add Summary to Job \*              |
-|  token  | `${{ github.token }}` | GitHub Access Token PAT [^1]       |
-
-If the `file` is a full URL, it will be fetched remotely.
-This allows maintaining a centralized configuration file.
+|  Input  | Default               | Input&nbsp;Description       |
+| :-----: | :-------------------- | :--------------------------- |
+|  file   | `.github/labels.yaml` | Configuration file path      |
+|   url   | `.github/labels.yaml` | Configuration file URL       |
+|  json   | -                     | Configuration JSON string    |
+| summary | `true`                | Add Summary to Job \*        |
+|  token  | `${{ github.token }}` | GitHub Access Token PAT [^1] |
 
 ```yaml
 - name: 'Label Creator Action'
@@ -140,7 +138,7 @@ With a remote file.
 - name: 'Label Creator Action'
   uses: cssnr/label-creator-action@master
   with:
-    file: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labeler.yaml
+    url: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labeler.yaml
 ```
 
 With an inline JSON string.

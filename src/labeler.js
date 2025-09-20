@@ -57,6 +57,26 @@ class Labeler {
         })
         return response.data
     }
+
+    /**
+     * Update Label
+     * @param {String} path
+     * @return {Promise<String>}
+     */
+    async getContent(path) {
+        console.debug('getContent:', path)
+        console.debug('github.context.sha:', github.context.sha)
+        const response = await this.octokit.rest.repos.getContent({
+            ...this.repo,
+            path: path,
+            ref: github.context.sha,
+        })
+        // return response.data
+        return Buffer.from(
+            response.data.content,
+            response.data.encoding
+        ).toString()
+    }
 }
 
 module.exports = Labeler

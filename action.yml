@@ -7,9 +7,12 @@ branding:
 
 inputs:
   file:
-    description: "Configuration file location"
+    description: "Configuration file path"
     required: false
     default: ".github/labels.yaml"
+  url:
+    description: "Configuration file URL"
+    required: false
   json:
     description: "Configuration JSON string"
     required: false
@@ -18,7 +21,7 @@ inputs:
     required: false
     default: "true"
   token:
-    description: "GitHub Token"
+    description: "GitHub Access Token PAT"
     required: false
     default: ${{ github.token }}
 
