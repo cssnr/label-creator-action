@@ -1,0 +1,33 @@
+name: "Label Creator"
+description: "Automatically Create or Update Labels to ensure they exist and are synchronized. Works from a centralized remote configuration file, local file or inline config."
+author: "Shane"
+branding:
+  icon: "tag"
+  color: "green"
+
+inputs:
+  file:
+    description: "Configuration file location"
+    required: false
+    default: ".github/labels.yaml"
+  json:
+    description: "Configuration JSON string"
+    required: false
+  summary:
+    description: "Add Summary to Job"
+    required: false
+    default: "true"
+  token:
+    description: "GitHub Token"
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  created:
+    description: "Labels Created"
+  updated:
+    description: "Labels Updated"
+
+runs:
+  using: "node20"
+  main: "dist/index.js"

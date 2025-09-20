@@ -1,0 +1,54 @@
+{
+  "act": true,
+
+  "ref": "refs/tags/v1.0.0",
+  "ref_name": "v1.0.0",
+
+  "release": {
+    "tag_name": "v1.0.0",
+    "id": "163692606",
+    "prerelease": true,
+    "draft": false
+  },
+
+  "number": 1,
+  "pull_request": {
+    "base": {
+      "ref": "master"
+    },
+    "head": {
+      "ref": "feature-1"
+    }
+  },
+
+  "repository": {
+    "name": "repository-name",
+    "description": "Example Repository Description",
+    "html_url": "https://github.com/cssnr/update-version-tags-action",
+    "license": {
+      "name": "GNU General Public License v3.0",
+      "spdx_id": "GPL-3.0"
+    }
+  },
+  "sender": {
+    "avatar_url": "https://avatars.githubusercontent.com/u/6071159?v=4",
+    "events_url": "https://api.github.com/users/smashedr/events{/privacy}",
+    "followers_url": "https://api.github.com/users/smashedr/followers",
+    "following_url": "https://api.github.com/users/smashedr/following{/other_user}",
+    "gists_url": "https://api.github.com/users/smashedr/gists{/gist_id}",
+    "gravatar_id": "",
+    "html_url": "https://github.com/smashedr",
+    "id": 6071159,
+    "login": "smashedr",
+    "node_id": "MDQ6VXNlcjYwNzExNTk=",
+    "organizations_url": "https://api.github.com/users/smashedr/orgs",
+    "received_events_url": "https://api.github.com/users/smashedr/received_events",
+    "repos_url": "https://api.github.com/users/smashedr/repos",
+    "site_admin": false,
+    "starred_url": "https://api.github.com/users/smashedr/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/smashedr/subscriptions",
+    "type": "User",
+    "url": "https://api.github.com/users/smashedr",
+    "user_view_type": "public"
+  }
+}
