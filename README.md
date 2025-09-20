@@ -157,6 +157,64 @@ With an inline JSON string.
       }
 ```
 
+<details><summary>Full Workflow</summary>
+
+This is the workflow I use to pull centralized configuration files from a repository.
+
+```yaml
+name: 'PR Labeler'
+
+on:
+  pull_request_target:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  labeler:
+    name: 'Labeler'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: 'Checkout Configs'
+        uses: actions/checkout@v4
+        with:
+          repository: cssnr/configs
+          ref: master
+          path: .configs
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            labels/**
+
+      - name: 'Debug'
+        continue-on-error: true
+        run: |
+          echo "::group::labels.yaml"
+          cat .configs/labels/labels.yaml
+          echo "::endgroup::"
+
+          echo "::group::labeler.yaml"
+          cat .configs/labels/labeler.yaml
+          echo "::endgroup::"
+
+      - name: 'Label Creator'
+        continue-on-error: true
+        uses: cssnr/label-creator-action@master
+        with:
+          file: .configs/labels/labels.yaml
+
+      - name: 'Labeler'
+        uses: actions/labeler@v6
+        with:
+          sync-labels: true
+          configuration-path: .configs/labels/labeler.yaml
+```
+
+Note: Steps with `continue-on-error: true` will fail silently.
+
+</details>
+
 For more examples, you can check out other projects using this action:  
 https://github.com/cssnr/label-creator-action/network/dependents
 
