@@ -29,12 +29,12 @@
 - [Contributing](#Contributing)
 
 Automatically Create or Update Labels to ensure they exist and are synchronized.
-Works from a centralized remote configuration file, local file or inline config.
+Works from a centralized remote configuration file/url, local file or inline config.
 
 This works by fetching the configuration file and current repository labels.
 It loops through the configuration and checks if the provided labels exist.
-If the label exist, it makes sure the color and description match, otherwise updates it.
 If the label does not exist, it creates a new label with the name, color and description.
+If the label exist, it makes sure the color and description matches, otherwise updates them.
 
 ```yaml
 - name: 'Label Creator Action'
@@ -78,10 +78,13 @@ All inputs are optional.
 |  Input  | Default               | Input&nbsp;Description       |
 | :-----: | :-------------------- | :--------------------------- |
 |  file   | `.github/labels.yaml` | Configuration file path      |
-|   url   | `.github/labels.yaml` | Configuration file URL       |
+|   url   | -                     | Configuration file URL       |
 |  json   | -                     | Configuration JSON string    |
 | summary | `true`                | Add Summary to Job \*        |
 |  token  | `${{ github.token }}` | GitHub Access Token PAT [^1] |
+
+Note: the `files` does not have to exist locally. It will be fetched from the API if it does not exist.
+This avoids the need to run `actions/checkout` before running this action when using a local file.
 
 ```yaml
 - name: 'Label Creator Action'
