@@ -37,8 +37,8 @@ If the label does not exist, it creates a new label with the name, color and des
 If the label exist, it makes sure the color and description matches, otherwise updates them.
 
 ```yaml
-- name: 'Label Creator Action'
-  uses: cssnr/label-creator-action@master
+- name: 'Label Creator'
+  uses: cssnr/label-creator-action@v1
 ```
 
 ## Features
@@ -87,8 +87,8 @@ Note: the `files` does not have to exist locally. It will be fetched from the AP
 This avoids the need to run `actions/checkout` before running this action when using a local file.
 
 ```yaml
-- name: 'Label Creator Action'
-  uses: cssnr/label-creator-action@master
+- name: 'Label Creator'
+  uses: cssnr/label-creator-action@v1
 ```
 
 See the [Examples](#examples) for usage.
@@ -111,10 +111,12 @@ Permissions documentation for [Workflows](https://docs.github.com/en/actions/wri
 | created | Labels Created |
 | updated | Labels Updated |
 
+Note: These are JSON Arrays.
+
 ```yaml
-- name: 'Label Creator Action'
+- name: 'Label Creator'
   id: label
-  uses: cssnr/label-creator-action@master
+  uses: cssnr/label-creator-action@v1
 
 - name: 'Echo Output'
   run: |
@@ -129,8 +131,8 @@ Permissions documentation for [Workflows](https://docs.github.com/en/actions/wri
 With a local file.
 
 ```yaml
-- name: 'Label Creator Action'
-  uses: cssnr/label-creator-action@master
+- name: 'Label Creator'
+  uses: cssnr/label-creator-action@v1
   with:
     file: .github/labels.yaml
 ```
@@ -138,8 +140,8 @@ With a local file.
 With a remote file.
 
 ```yaml
-- name: 'Label Creator Action'
-  uses: cssnr/label-creator-action@master
+- name: 'Label Creator'
+  uses: cssnr/label-creator-action@v1
   with:
     url: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labeler.yaml
 ```
@@ -147,8 +149,8 @@ With a remote file.
 With an inline JSON string.
 
 ```yaml
-- name: 'Label Creator Action'
-  uses: cssnr/label-creator-action@master
+- name: 'Label Creator'
+  uses: cssnr/label-creator-action@v1
   with:
     json: |
       {
@@ -200,7 +202,7 @@ jobs:
 
       - name: 'Label Creator'
         continue-on-error: true
-        uses: cssnr/label-creator-action@master
+        uses: cssnr/label-creator-action@v1
         with:
           file: .configs/labels/labels.yaml
 
