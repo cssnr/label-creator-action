@@ -5,7 +5,7 @@
 [![Workflow Release](https://img.shields.io/github/actions/workflow/status/cssnr/label-creator-action/release.yaml?logo=cachet&label=release)](https://github.com/cssnr/label-creator-action/actions/workflows/release.yaml)
 [![Workflow Test](https://img.shields.io/github/actions/workflow/status/cssnr/label-creator-action/test.yaml?logo=cachet&label=test)](https://github.com/cssnr/label-creator-action/actions/workflows/test.yaml)
 [![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/label-creator-action/lint.yaml?logo=cachet&label=lint)](https://github.com/cssnr/label-creator-action/actions/workflows/lint.yaml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=cssnr_label-creator-action&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=smashedr_label-creator-action)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=cssnr_label-creator-action&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=cssnr_label-creator-action)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/label-creator-action?logo=github&label=updated)](https://github.com/cssnr/label-creator-action/pulse)
 [![Codeberg Last Commit](https://img.shields.io/gitea/last-commit/shaner/label-creator-action/master?gitea_url=https%3A%2F%2Fcodeberg.org%2F&logo=codeberg&logoColor=white&label=updated)](https://codeberg.org/shaner/label-creator-action)
 [![GitHub Contributors](https://img.shields.io/github/contributors/cssnr/label-creator-action?logo=github)](https://github.com/cssnr/label-creator-action/graphs/contributors)
