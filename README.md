@@ -83,8 +83,8 @@ All inputs are optional.
 | summary | `true`                | Add Summary to Job \*        |
 |  token  | `${{ github.token }}` | GitHub Access Token PAT [^1] |
 
-Note: the `files` does not have to exist locally. It will be fetched from the API if it does not exist.
-This avoids the need to run `actions/checkout` before running this action when using a local file.
+This action is designed to work on the `pull_request_target` trigger.
+Example workflow: [.github/workflows/release.yaml](https://github.com/cssnr/label-creator-action/blob/master/.github/workflows/release.yaml)
 
 ```yaml
 - name: 'Label Creator'
