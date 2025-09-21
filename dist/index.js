@@ -29931,8 +29931,10 @@ class Labeler {
     /**
      * GitHub Labeler
      * @param {String} token
+     * @param {Boolean} dryRun
      */
-    constructor(token) {
+    constructor(token, dryRun = false) {
+        this.dryRun = dryRun
         this.repo = github.context.repo
         this.octokit = github.getOctokit(token)
     }
@@ -29958,6 +29960,7 @@ class Labeler {
      */
     async createLabel(name, color, description) {
         console.debug(`createLabel: ${name} - ${color} - ${description}`)
+        if (this.dryRun) return 'Dry Run'
         const response = await this.octokit.rest.issues.createLabel({
             ...this.repo,
             name,
@@ -29976,6 +29979,7 @@ class Labeler {
      */
     async updateLabel(name, color, description) {
         console.debug(`updateLabel: ${name} - ${color} - ${description}`)
+        if (this.dryRun) return 'Dry Run'
         const response = await this.octokit.rest.issues.updateLabel({
             ...this.repo,
             name,
@@ -29983,6 +29987,20 @@ class Labeler {
             description,
         })
         return response.data
+    }
+
+    /**
+     * Delete Label
+     * @param {String} name
+     * @return {Promise<OctokitResponse>}
+     */
+    async deleteLabel(name) {
+        console.debug(`deleteLabel: ${name}`)
+        if (this.dryRun) return 'Dry Run'
+        return await this.octokit.rest.issues.deleteLabel({
+            ...this.repo,
+            name,
+        })
     }
 
     /**
@@ -40551,7 +40569,7 @@ const Labeler = __nccwpck_require__(5476)
         core.endGroup() // Inputs
 
         // Config
-        const labeler = new Labeler(inputs.token)
+        const labeler = new Labeler(inputs.token, inputs.dryRun)
         let config = await getConfig(inputs, labeler)
         console.log('config:', config)
         if (!config) {
@@ -40570,6 +40588,7 @@ const Labeler = __nccwpck_require__(5476)
 
         const created = []
         const updated = []
+        const deleted = []
 
         // Process Labels
         core.startGroup('Process Labels')
@@ -40605,19 +40624,37 @@ const Labeler = __nccwpck_require__(5476)
         }
         core.endGroup() // Process Labels
 
+        // Delete Labels
+        if (inputs.delete) {
+            core.startGroup('Delete Labels')
+            const keys = Object.keys(config).map((k) => k.toLowerCase())
+            const toDelete = labels
+                .filter((label) => !keys.includes(label.name.toLowerCase()))
+                .map((label) => label.name)
+            console.log('toDelete:', toDelete)
+            for (const label of toDelete) {
+                const result = await labeler.deleteLabel(label)
+                console.log('result:', result)
+                deleted.push(label)
+            }
+            core.endGroup() // Delete Labels
+        }
+
         console.log('created:', created)
         console.log('updated:', updated)
+        console.log('deleted:', deleted)
 
         // Outputs
         core.info('📩 Setting Outputs')
         core.setOutput('created', JSON.stringify(created))
         core.setOutput('updated', JSON.stringify(updated))
+        core.setOutput('deleted', JSON.stringify(deleted))
 
         // Summary
         if (inputs.summary) {
             core.info('📝 Writing Job Summary')
             try {
-                await addSummary(inputs, config, created, updated)
+                await addSummary(inputs, config, created, updated, deleted)
             } catch (e) {
                 console.log(e)
                 core.error(`Error writing Job Summary ${e.message}`)
@@ -40638,19 +40675,23 @@ const Labeler = __nccwpck_require__(5476)
  * @param {Object} config
  * @param {String[]} created
  * @param {String[]} updated
+ * @param {String[]} deleted
  * @return {Promise<void>}
  */
-async function addSummary(inputs, config, created, updated) {
+async function addSummary(inputs, config, created, updated, deleted) {
     core.summary.addRaw('## Label Creator Action\n')
 
     if (created.length) {
         core.summary.addRaw(`Created ${created.length} Labels:\n`)
         core.summary.addCodeBlock(created.join('\n'), 'text')
     }
-
     if (updated.length) {
         core.summary.addRaw(`Updated ${updated.length} Labels:\n`)
         core.summary.addCodeBlock(updated.join('\n'), 'text')
+    }
+    if (deleted.length) {
+        core.summary.addRaw(`Deleted ${deleted.length} Labels:\n`)
+        core.summary.addCodeBlock(deleted.join('\n'), 'text')
     }
 
     core.summary.addRaw('<details><summary>Configuration</summary>')
@@ -40704,7 +40745,9 @@ async function getConfig(inputs, labeler) {
  * @property {String|undefined} file
  * @property {String|undefined} url
  * @property {String|undefined} json
+ * @property {Boolean} delete
  * @property {Boolean} summary
+ * @property {Boolean} dryRun
  * @property {String} token
  * @return {Inputs}
  */
@@ -40713,7 +40756,9 @@ function getInputs() {
         file: core.getInput('file'),
         url: core.getInput('url'),
         json: core.getInput('json'),
+        delete: core.getBooleanInput('delete'),
         summary: core.getBooleanInput('summary'),
+        dryRun: core.getBooleanInput('dry-run'),
         token: core.getInput('token', { required: true }),
     }
 }
