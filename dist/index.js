@@ -40682,7 +40682,7 @@ async function addSummary(inputs, config, created, updated, deleted) {
     core.summary.addRaw('## Label Creator Action\n')
 
     if (inputs.dryRun) {
-        core.summary.addRaw('⚠️ **Dry Run - No Changes Made!**\n')
+        core.summary.addRaw('⚠️ **Dry Run - No Changes Made!** ')
         core.summary.addRaw('Set `dry-run` to `false` to process changes.\n\n')
     }
 
