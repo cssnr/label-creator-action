@@ -16,10 +16,18 @@ inputs:
   json:
     description: "Configuration JSON string"
     required: false
+  delete:
+    description: "Delete labels not in config"
+    required: false
+    default: "false"
   summary:
     description: "Add Summary to Job"
     required: false
     default: "true"
+  dry-run:
+    description: "Dry Run"
+    required: false
+    default: "false"
   token:
     description: "GitHub Access Token PAT"
     required: false
@@ -30,6 +38,8 @@ outputs:
     description: "Labels Created"
   updated:
     description: "Labels Updated"
+  deleted:
+    description: "Labels Deleted"
 
 # https://www.schemastore.org/github-action.json
 runs:

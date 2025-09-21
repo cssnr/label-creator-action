@@ -40,21 +40,27 @@ jobs:
         uses: ./
         with:
           file: ".github/labels.yaml"
+          #delete: true
+          #dry-run: true
 
       - name: "Delete Local File"
+        if: ${{ !github.event.act }}
         run: rm -rf .github/labels.yaml
 
       - name: "2 - Test API"
+        if: ${{ !github.event.act }}
         uses: ./
         with:
           file: ".github/labels.yaml"
 
       - name: "3 - Test URL"
+        if: ${{ !github.event.act }}
         uses: ./
         with:
           url: "https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml"
 
       - name: "4 - Test JSON"
+        if: ${{ !github.event.act }}
         uses: ./
         with:
           file: "https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml"

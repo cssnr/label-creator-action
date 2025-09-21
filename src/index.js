@@ -24,7 +24,7 @@ const Labeler = require('./labeler')
         core.endGroup() // Inputs
 
         // Config
-        const labeler = new Labeler(inputs.token)
+        const labeler = new Labeler(inputs.token, inputs.dryRun)
         let config = await getConfig(inputs, labeler)
         console.log('config:', config)
         if (!config) {
@@ -43,6 +43,7 @@ const Labeler = require('./labeler')
 
         const created = []
         const updated = []
+        const deleted = []
 
         // Process Labels
         core.startGroup('Process Labels')
@@ -78,19 +79,37 @@ const Labeler = require('./labeler')
         }
         core.endGroup() // Process Labels
 
+        // Delete Labels
+        if (inputs.delete) {
+            core.startGroup('Delete Labels')
+            const keys = Object.keys(config).map((k) => k.toLowerCase())
+            const toDelete = labels
+                .filter((label) => !keys.includes(label.name.toLowerCase()))
+                .map((label) => label.name)
+            console.log('toDelete:', toDelete)
+            for (const label of toDelete) {
+                const result = await labeler.deleteLabel(label)
+                console.log('result:', result)
+                deleted.push(label)
+            }
+            core.endGroup() // Delete Labels
+        }
+
         console.log('created:', created)
         console.log('updated:', updated)
+        console.log('deleted:', deleted)
 
         // Outputs
         core.info('📩 Setting Outputs')
         core.setOutput('created', JSON.stringify(created))
         core.setOutput('updated', JSON.stringify(updated))
+        core.setOutput('deleted', JSON.stringify(deleted))
 
         // Summary
         if (inputs.summary) {
             core.info('📝 Writing Job Summary')
             try {
-                await addSummary(inputs, config, created, updated)
+                await addSummary(inputs, config, created, updated, deleted)
             } catch (e) {
                 console.log(e)
                 core.error(`Error writing Job Summary ${e.message}`)
@@ -111,19 +130,23 @@ const Labeler = require('./labeler')
  * @param {Object} config
  * @param {String[]} created
  * @param {String[]} updated
+ * @param {String[]} deleted
  * @return {Promise<void>}
  */
-async function addSummary(inputs, config, created, updated) {
+async function addSummary(inputs, config, created, updated, deleted) {
     core.summary.addRaw('## Label Creator Action\n')
 
     if (created.length) {
         core.summary.addRaw(`Created ${created.length} Labels:\n`)
         core.summary.addCodeBlock(created.join('\n'), 'text')
     }
-
     if (updated.length) {
         core.summary.addRaw(`Updated ${updated.length} Labels:\n`)
         core.summary.addCodeBlock(updated.join('\n'), 'text')
+    }
+    if (deleted.length) {
+        core.summary.addRaw(`Deleted ${deleted.length} Labels:\n`)
+        core.summary.addCodeBlock(deleted.join('\n'), 'text')
     }
 
     core.summary.addRaw('<details><summary>Configuration</summary>')
@@ -177,7 +200,9 @@ async function getConfig(inputs, labeler) {
  * @property {String|undefined} file
  * @property {String|undefined} url
  * @property {String|undefined} json
+ * @property {Boolean} delete
  * @property {Boolean} summary
+ * @property {Boolean} dryRun
  * @property {String} token
  * @return {Inputs}
  */
@@ -186,7 +211,9 @@ function getInputs() {
         file: core.getInput('file'),
         url: core.getInput('url'),
         json: core.getInput('json'),
+        delete: core.getBooleanInput('delete'),
         summary: core.getBooleanInput('summary'),
+        dryRun: core.getBooleanInput('dry-run'),
         token: core.getInput('token', { required: true }),
     }
 }

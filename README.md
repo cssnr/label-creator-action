@@ -7,7 +7,7 @@
 [![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/label-creator-action/lint.yaml?logo=cachet&label=lint)](https://github.com/cssnr/label-creator-action/actions/workflows/lint.yaml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=cssnr_label-creator-action&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=cssnr_label-creator-action)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/label-creator-action?logo=github&label=updated)](https://github.com/cssnr/label-creator-action/pulse)
-[![Codeberg Last Commit](https://img.shields.io/gitea/last-commit/shaner/label-creator-action/master?gitea_url=https%3A%2F%2Fcodeberg.org%2F&logo=codeberg&logoColor=white&label=updated)](https://codeberg.org/shaner/label-creator-action)
+[![Codeberg Last Commit](https://img.shields.io/gitea/last-commit/shaner/label-creator-action/master?gitea_url=https%3A%2F%2Fcodeberg.org%2F&logo=codeberg&logoColor=white&label=updated)](https://codeberg.org/cssnr/label-creator-action)
 [![GitHub Contributors](https://img.shields.io/github/contributors/cssnr/label-creator-action?logo=github)](https://github.com/cssnr/label-creator-action/graphs/contributors)
 [![GitHub Repo Size](https://img.shields.io/github/repo-size/cssnr/label-creator-action?logo=bookstack&logoColor=white&label=repo%20size)](https://github.com/cssnr/label-creator-action)
 [![GitHub Top Language](https://img.shields.io/github/languages/top/cssnr/label-creator-action?logo=htmx)](https://github.com/cssnr/label-creator-action)
@@ -78,13 +78,15 @@ Example: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads
 
 All inputs are optional.
 
-|  Input  | Default               | Input&nbsp;Description       |
-| :-----: | :-------------------- | :--------------------------- |
-|  file   | `.github/labels.yaml` | Configuration file path      |
-|   url   | -                     | Configuration file URL       |
-|  json   | -                     | Configuration JSON string    |
-| summary | `true`                | Add Summary to Job \*        |
-|  token  | `${{ github.token }}` | GitHub Access Token PAT [^1] |
+|  Input  | Default&nbsp;Value    | Description&nbsp;of&nbsp;Input |
+| :-----: | :-------------------- | :----------------------------- |
+|  file   | `.github/labels.yaml` | Configuration file path        |
+|   url   | -                     | Configuration file URL         |
+|  json   | -                     | Configuration JSON string      |
+| delete  | `false`               | Delete labels not in config    |
+| summary | `true`                | Add Summary to Job             |
+| dry-run | `false`               | Dry Run, only output results   |
+|  token  | `${{ github.token }}` | GitHub Access Token PAT [^1]   |
 
 This action is designed to work on the `pull_request_target` trigger.  
 Example workflow: [.github/workflows/release.yaml](https://github.com/cssnr/label-creator-action/blob/master/.github/workflows/release.yaml)
