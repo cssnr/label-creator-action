@@ -4,8 +4,10 @@ class Labeler {
     /**
      * GitHub Labeler
      * @param {String} token
+     * @param {Boolean} dryRun
      */
-    constructor(token) {
+    constructor(token, dryRun = false) {
+        this.dryRun = dryRun
         this.repo = github.context.repo
         this.octokit = github.getOctokit(token)
     }
@@ -31,6 +33,7 @@ class Labeler {
      */
     async createLabel(name, color, description) {
         console.debug(`createLabel: ${name} - ${color} - ${description}`)
+        if (this.dryRun) return 'Dry Run'
         const response = await this.octokit.rest.issues.createLabel({
             ...this.repo,
             name,
@@ -49,6 +52,7 @@ class Labeler {
      */
     async updateLabel(name, color, description) {
         console.debug(`updateLabel: ${name} - ${color} - ${description}`)
+        if (this.dryRun) return 'Dry Run'
         const response = await this.octokit.rest.issues.updateLabel({
             ...this.repo,
             name,
@@ -56,6 +60,20 @@ class Labeler {
             description,
         })
         return response.data
+    }
+
+    /**
+     * Delete Label
+     * @param {String} name
+     * @return {Promise<OctokitResponse>}
+     */
+    async deleteLabel(name) {
+        console.debug(`deleteLabel: ${name}`)
+        if (this.dryRun) return 'Dry Run'
+        return await this.octokit.rest.issues.deleteLabel({
+            ...this.repo,
+            name,
+        })
     }
 
     /**
