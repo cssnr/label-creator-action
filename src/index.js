@@ -142,16 +142,19 @@ async function addSummary(inputs, config, created, updated, deleted) {
     }
 
     if (created.length) {
-        core.summary.addRaw(`Created ${created.length} Labels:\n`)
+        core.summary.addRaw(`➕ Created ${created.length} Labels:\n`)
         core.summary.addCodeBlock(created.join('\n'), 'text')
     }
     if (updated.length) {
-        core.summary.addRaw(`Updated ${updated.length} Labels:\n`)
+        core.summary.addRaw(`📝 Updated ${updated.length} Labels:\n`)
         core.summary.addCodeBlock(updated.join('\n'), 'text')
     }
     if (deleted.length) {
-        core.summary.addRaw(`Deleted ${deleted.length} Labels:\n`)
+        core.summary.addRaw(`❌ Deleted ${deleted.length} Labels:\n`)
         core.summary.addCodeBlock(deleted.join('\n'), 'text')
+    }
+    if (!created.length && !updated.length && !deleted.length) {
+        core.summary.addRaw('✅ All Labels are Up-to-Date.\n\n')
     }
 
     core.summary.addRaw('<details><summary>Configuration</summary>')
