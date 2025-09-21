@@ -40,8 +40,8 @@ jobs:
         uses: ./
         with:
           file: ".github/labels.yaml"
-          #delete: true
-          #dry-run: true
+          delete: true
+          dry-run: true
 
       - name: "Delete Local File"
         if: ${{ !github.event.act }}
@@ -66,6 +66,7 @@ jobs:
           file: "https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml"
           json: |
             {
+              "workflows": {"color": "ffffff", "description": "Workflows modification"},
               "source": {"color": "fbca04", "description": "Source modification"},
               "documentation": {"color": "0075ca", "description": "Documentation updates"}
             }
