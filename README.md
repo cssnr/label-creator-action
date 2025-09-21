@@ -20,7 +20,6 @@
 # Label Creator Action
 
 - [Features](#Features)
-  - [Planned](#Planned)
 - [Configuration](#Configuration)
 - [Inputs](#Inputs)
   - [Permissions](#Permissions)
@@ -46,11 +45,7 @@ If the label exist, it makes sure the color and description matches, otherwise u
 ## Features
 
 - Keep Labels up-to-date on every workflow run.
-- Use a centralized configuration file, local file, or inline JSON.
-
-### Planned
-
-- Option to delete labels not in configuration.
+- Use a [centralized configuration](#Configuration) local or remote file, or inline JSON.
 
 ## Configuration
 
@@ -89,7 +84,7 @@ All inputs are optional.
 |  token  | `${{ github.token }}` | GitHub Access Token PAT [^1]   |
 
 This action is designed to work on the `pull_request_target` trigger.  
-Example workflow: [.github/workflows/release.yaml](https://github.com/cssnr/label-creator-action/blob/master/.github/workflows/release.yaml)
+Example workflow: [.github/workflows/labeler.yaml](https://github.com/cssnr/label-creator-action/blob/master/.github/workflows/labeler.yaml)
 
 ```yaml
 - name: 'Label Creator'
@@ -115,6 +110,7 @@ Permissions documentation for [Workflows](https://docs.github.com/en/actions/wri
 | :------ | :------------- |
 | created | Labels Created |
 | updated | Labels Updated |
+| deleted | Labels Deleted |
 
 Note: These are JSON Arrays.
 
@@ -127,6 +123,7 @@ Note: These are JSON Arrays.
   run: |
     echo "created: ${{ steps.label.outputs.created }}"
     echo "updated: ${{ steps.label.outputs.updated }}"
+    echo "deleted: ${{ steps.label.outputs.deleted }}"
 ```
 
 ## Examples
