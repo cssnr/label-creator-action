@@ -40681,6 +40681,11 @@ const Labeler = __nccwpck_require__(5476)
 async function addSummary(inputs, config, created, updated, deleted) {
     core.summary.addRaw('## Label Creator Action\n')
 
+    if (inputs.dryRun) {
+        core.summary.addRaw('⚠️ **Dry Run - No Changes Made!**\n')
+        core.summary.addRaw('Set `dry-run` to `false` to process changes.\n\n')
+    }
+
     if (created.length) {
         core.summary.addRaw(`Created ${created.length} Labels:\n`)
         core.summary.addCodeBlock(created.join('\n'), 'text')
