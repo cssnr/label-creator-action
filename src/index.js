@@ -1,6 +1,6 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
-const fs = require('fs')
+const fs = require('node:fs')
 const YAML = require('yaml')
 
 const Api = require('./api')

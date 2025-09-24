@@ -30145,6 +30145,14 @@ module.exports = require("node:events");
 
 /***/ }),
 
+/***/ 3024:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:fs");
+
+/***/ }),
+
 /***/ 7075:
 /***/ ((module) => {
 
@@ -40542,7 +40550,7 @@ exports.visitAsync = visitAsync;
 var __webpack_exports__ = {};
 const core = __nccwpck_require__(7484)
 const github = __nccwpck_require__(3228)
-const fs = __nccwpck_require__(9896)
+const fs = __nccwpck_require__(3024)
 const YAML = __nccwpck_require__(8815)
 
 const Api = __nccwpck_require__(8793)
