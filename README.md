@@ -1,5 +1,5 @@
 [![GitHub Tag Major](https://img.shields.io/github/v/tag/cssnr/label-creator-action?sort=semver&filter=!v*.*&logo=git&logoColor=white&labelColor=585858&label=%20)](https://github.com/cssnr/label-creator-action/tags)
-[![GitHub Tag Minor](https://img.shields.io/github/v/tag/cssnr/label-creator-action?sort=semver&filter=!v*.*.*&logo=git&logoColor=white&labelColor=585858&label=%20)](https://github.com/cssnr/label-creator-action/tags)
+[![GitHub Tag Minor](https://img.shields.io/github/v/tag/cssnr/label-creator-action?sort=semver&filter=!v*.*.*&logo=git&logoColor=white&labelColor=585858&label=%20)](https://github.com/cssnr/label-creator-action/releases)
 [![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/label-creator-action?logo=git&logoColor=white&labelColor=585858&label=%20)](https://github.com/cssnr/label-creator-action/releases/latest)
 [![GitHub Dist Size](https://img.shields.io/github/size/cssnr/label-creator-action/dist%2Findex.js?logo=bookstack&logoColor=white&label=dist%20size)](https://github.com/cssnr/label-creator-action/blob/master/src)
 [![Workflow Release](https://img.shields.io/github/actions/workflow/status/cssnr/label-creator-action/release.yaml?logo=cachet&label=release)](https://github.com/cssnr/label-creator-action/actions/workflows/release.yaml)
