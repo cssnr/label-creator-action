@@ -40620,9 +40620,9 @@ const Api = __nccwpck_require__(8793)
         // Delete Labels
         if (inputs.delete) {
             core.startGroup('Delete Labels')
-            const keys = Object.keys(config).map((k) => k.toLowerCase())
+            const keys = new Set(Object.keys(config).map((k) => k.toLowerCase()))
             const toDelete = labels
-                .filter((label) => !keys.includes(label.name.toLowerCase()))
+                .filter((label) => !keys.has(label.name.toLowerCase()))
                 .map((label) => label.name)
             console.log('toDelete:', toDelete)
             for (const label of toDelete) {
