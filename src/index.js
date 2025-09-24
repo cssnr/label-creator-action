@@ -1,9 +1,9 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
-const fs = require('fs')
+const fs = require('node:fs')
 const YAML = require('yaml')
 
-const Labeler = require('./labeler')
+const Api = require('./api')
 
 ;(async () => {
     try {
@@ -24,8 +24,8 @@ const Labeler = require('./labeler')
         core.endGroup() // Inputs
 
         // Config
-        const labeler = new Labeler(inputs.token, inputs.dryRun)
-        let config = await getConfig(inputs, labeler)
+        const api = new Api(inputs.token, inputs.dryRun)
+        let config = await getConfig(inputs, api)
         console.log('config:', config)
         if (!config) {
             core.error('Must provide a file, url, or json input.')
@@ -36,7 +36,7 @@ const Labeler = require('./labeler')
         // Labels
         core.startGroup('Labels')
         console.log('github.context.repo:', github.context.repo)
-        const labels = await labeler.listLabels()
+        const labels = await api.listLabels()
         console.log('labels.length:', labels.length)
         console.log(labels)
         core.endGroup() // Labels
@@ -58,7 +58,7 @@ const Labeler = require('./labeler')
                     (data.description && data.description !== label.description)
                 ) {
                     console.log(`! ! ! Update - ${name}`)
-                    const result = await labeler.updateLabel(
+                    const result = await api.updateLabel(
                         name,
                         data.color,
                         data.description
@@ -68,11 +68,7 @@ const Labeler = require('./labeler')
                 }
             } else {
                 console.log(`+ + + Create - ${name}`)
-                const result = await labeler.createLabel(
-                    name,
-                    data.color,
-                    data.description
-                )
+                const result = await api.createLabel(name, data.color, data.description)
                 console.log('result:', result)
                 created.push(name)
             }
@@ -82,13 +78,13 @@ const Labeler = require('./labeler')
         // Delete Labels
         if (inputs.delete) {
             core.startGroup('Delete Labels')
-            const keys = Object.keys(config).map((k) => k.toLowerCase())
+            const keys = new Set(Object.keys(config).map((k) => k.toLowerCase()))
             const toDelete = labels
-                .filter((label) => !keys.includes(label.name.toLowerCase()))
+                .filter((label) => !keys.has(label.name.toLowerCase()))
                 .map((label) => label.name)
             console.log('toDelete:', toDelete)
             for (const label of toDelete) {
-                const result = await labeler.deleteLabel(label)
+                const result = await api.deleteLabel(label)
                 console.log('result:', result)
                 deleted.push(label)
             }
@@ -175,10 +171,10 @@ async function addSummary(inputs, config, created, updated, deleted) {
 /**
  * Get Config
  * @param {Inputs} inputs
- * @param {Labeler} labeler
+ * @param {Api} api
  * @return {Object}
  */
-async function getConfig(inputs, labeler) {
+async function getConfig(inputs, api) {
     if (inputs.json) {
         console.log('Processing JSON:', inputs.json)
         return JSON.parse(inputs.json)
@@ -196,7 +192,7 @@ async function getConfig(inputs, labeler) {
             return YAML.parse(file)
         } else {
             console.log('File not found, get content from API.')
-            const text = await labeler.getContent(inputs.file)
+            const text = await api.getContent(inputs.file)
             return YAML.parse(text)
         }
     }
