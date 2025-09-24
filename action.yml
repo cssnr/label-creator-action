@@ -41,7 +41,6 @@ outputs:
   deleted:
     description: "Labels Deleted"
 
-# https://www.schemastore.org/github-action.json
 runs:
   using: "node24"
   main: "dist/index.js"

@@ -65,7 +65,7 @@ class Labeler {
     /**
      * Delete Label
      * @param {String} name
-     * @return {Promise<OctokitResponse>}
+     * @return {Promise<InstanceType<typeof github.GitHub>|Undefined>}
      */
     async deleteLabel(name) {
         console.debug(`deleteLabel: ${name}`)
@@ -89,10 +89,7 @@ class Labeler {
             // ref: github.context.sha,
         })
         // console.debug('response:', response)
-        return Buffer.from(
-            response.data.content,
-            response.data.encoding
-        ).toString()
+        return Buffer.from(response.data.content, response.data.encoding).toString()
     }
 }
 
