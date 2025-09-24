@@ -1,5 +1,6 @@
 {
   "name": "label-creator-action",
+  "private": true,
   "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/index.js",

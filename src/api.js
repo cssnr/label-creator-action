@@ -1,8 +1,8 @@
 const github = require('@actions/github')
 
-class Labeler {
+class Api {
     /**
-     * GitHub Labeler
+     * GitHub Api
      * @param {String} token
      * @param {Boolean} dryRun
      */
@@ -93,4 +93,4 @@ class Labeler {
     }
 }
 
-module.exports = Labeler
+module.exports = Api

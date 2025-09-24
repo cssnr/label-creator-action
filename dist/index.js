@@ -29922,14 +29922,14 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 5476:
+/***/ 8793:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const github = __nccwpck_require__(3228)
 
-class Labeler {
+class Api {
     /**
-     * GitHub Labeler
+     * GitHub Api
      * @param {String} token
      * @param {Boolean} dryRun
      */
@@ -30020,7 +30020,7 @@ class Labeler {
     }
 }
 
-module.exports = Labeler
+module.exports = Api
 
 
 /***/ }),
@@ -40545,7 +40545,7 @@ const github = __nccwpck_require__(3228)
 const fs = __nccwpck_require__(9896)
 const YAML = __nccwpck_require__(8815)
 
-const Labeler = __nccwpck_require__(5476)
+const Api = __nccwpck_require__(8793)
 
 ;(async () => {
     try {
@@ -40566,8 +40566,8 @@ const Labeler = __nccwpck_require__(5476)
         core.endGroup() // Inputs
 
         // Config
-        const labeler = new Labeler(inputs.token, inputs.dryRun)
-        let config = await getConfig(inputs, labeler)
+        const api = new Api(inputs.token, inputs.dryRun)
+        let config = await getConfig(inputs, api)
         console.log('config:', config)
         if (!config) {
             core.error('Must provide a file, url, or json input.')
@@ -40578,7 +40578,7 @@ const Labeler = __nccwpck_require__(5476)
         // Labels
         core.startGroup('Labels')
         console.log('github.context.repo:', github.context.repo)
-        const labels = await labeler.listLabels()
+        const labels = await api.listLabels()
         console.log('labels.length:', labels.length)
         console.log(labels)
         core.endGroup() // Labels
@@ -40600,7 +40600,7 @@ const Labeler = __nccwpck_require__(5476)
                     (data.description && data.description !== label.description)
                 ) {
                     console.log(`! ! ! Update - ${name}`)
-                    const result = await labeler.updateLabel(
+                    const result = await api.updateLabel(
                         name,
                         data.color,
                         data.description
@@ -40610,11 +40610,7 @@ const Labeler = __nccwpck_require__(5476)
                 }
             } else {
                 console.log(`+ + + Create - ${name}`)
-                const result = await labeler.createLabel(
-                    name,
-                    data.color,
-                    data.description
-                )
+                const result = await api.createLabel(name, data.color, data.description)
                 console.log('result:', result)
                 created.push(name)
             }
@@ -40630,7 +40626,7 @@ const Labeler = __nccwpck_require__(5476)
                 .map((label) => label.name)
             console.log('toDelete:', toDelete)
             for (const label of toDelete) {
-                const result = await labeler.deleteLabel(label)
+                const result = await api.deleteLabel(label)
                 console.log('result:', result)
                 deleted.push(label)
             }
@@ -40717,10 +40713,10 @@ async function addSummary(inputs, config, created, updated, deleted) {
 /**
  * Get Config
  * @param {Inputs} inputs
- * @param {Labeler} labeler
+ * @param {Api} api
  * @return {Object}
  */
-async function getConfig(inputs, labeler) {
+async function getConfig(inputs, api) {
     if (inputs.json) {
         console.log('Processing JSON:', inputs.json)
         return JSON.parse(inputs.json)
@@ -40738,7 +40734,7 @@ async function getConfig(inputs, labeler) {
             return YAML.parse(file)
         } else {
             console.log('File not found, get content from API.')
-            const text = await labeler.getContent(inputs.file)
+            const text = await api.getContent(inputs.file)
             return YAML.parse(text)
         }
     }
