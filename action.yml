@@ -34,6 +34,8 @@ inputs:
     default: ${{ github.token }}
 
 outputs:
+  changed:
+    description: "Boolean if Changes"
   created:
     description: "Labels Created"
   updated:

@@ -14,7 +14,8 @@ class Api {
 
     /**
      * List Labels
-     * @return {Promise<Object[]|null>}
+     * https://docs.github.com/en/rest/issues/labels?apiVersion=2022-11-28#list-labels-for-a-repository
+     * @return {Promise<Object[]>} Label Data Object Array
      */
     async listLabels() {
         console.debug('listLabels')
@@ -26,10 +27,11 @@ class Api {
 
     /**
      * Create Label
+     * https://docs.github.com/en/rest/issues/labels?apiVersion=2022-11-28#create-a-label
      * @param {String} name
      * @param {String} color
      * @param {String} description
-     * @return {Promise<Object>}
+     * @return {Promise<Object>} Label Data Object
      */
     async createLabel(name, color, description) {
         console.debug(`createLabel: ${name} - ${color} - ${description}`)
@@ -45,10 +47,11 @@ class Api {
 
     /**
      * Update Label
+     * https://docs.github.com/en/rest/issues/labels?apiVersion=2022-11-28#update-a-label
      * @param {String} name
      * @param {String} color
      * @param {String} description
-     * @return {Promise<Object>}
+     * @return {Promise<Object>} Label Data Object
      */
     async updateLabel(name, color, description) {
         console.debug(`updateLabel: ${name} - ${color} - ${description}`)
@@ -78,8 +81,9 @@ class Api {
 
     /**
      * Get File Content
+     * https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
      * @param {String} path
-     * @return {Promise<String>}
+     * @return {Promise<String>} File Content String
      */
     async getContent(path) {
         console.debug('getContent:', path)

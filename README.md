@@ -11,6 +11,7 @@
 [![GitHub Contributors](https://img.shields.io/github/contributors/cssnr/label-creator-action?logo=github)](https://github.com/cssnr/label-creator-action/graphs/contributors)
 [![GitHub Repo Size](https://img.shields.io/github/repo-size/cssnr/label-creator-action?logo=bookstack&logoColor=white&label=repo%20size)](https://github.com/cssnr/label-creator-action?tab=readme-ov-file#readme)
 [![GitHub Top Language](https://img.shields.io/github/languages/top/cssnr/label-creator-action?logo=htmx)](https://github.com/cssnr/label-creator-action)
+[![GitHub Discussions](https://img.shields.io/github/discussions/cssnr/label-creator-action?logo=github)](https://github.com/cssnr/label-creator-action/discussions)
 [![GitHub Forks](https://img.shields.io/github/forks/cssnr/label-creator-action?style=flat&logo=github)](https://github.com/cssnr/label-creator-action/forks)
 [![GitHub Repo Stars](https://img.shields.io/github/stars/cssnr/label-creator-action?style=flat&logo=github)](https://github.com/cssnr/label-creator-action/stargazers)
 [![GitHub Org Stars](https://img.shields.io/github/stars/cssnr?style=flat&logo=github&label=org%20stars)](https://cssnr.github.io/)
@@ -43,6 +44,9 @@ You can also enable `delete` which will delete any labels not in the configurati
   uses: cssnr/label-creator-action@v1
 ```
 
+This is the workflow I use on all my repos: [.github/workflows/labeler.yaml](.github/workflows/labeler.yaml)  
+Which checks out these centralized configs: [https://github.com/cssnr/configs](https://github.com/cssnr/configs/tree/master/labels)
+
 ## Features
 
 - Keep Labels up-to-date on every workflow run.
@@ -54,35 +58,38 @@ The configuration file can be remote file, local file, or inline JSON string.
 In all cases the same format is used.
 
 ```yaml
-source:
-  color: fbca04
-  description: Source modification
+workflows:
+  color: ffffff
+  description: Workflows modification
 documentation:
   color: 0075ca
   description: Documentation updates
+source:
+  color: fbca04
+  description: Source modification
 ```
 
 Both `color` and `description` are optional; however, I assume you are using this action because you want to set one of them.
 If you are using [actions/labeler](https://github.com/actions/labeler) it will create the labels, but not set the description or color.
 
-By default, the file is sourced from `.github/labels.yaml` but can be placed anywhere.
+By default, the file is sourced from [.github/labels.yaml](https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml) but can be placed anywhere.
 
 This includes remote files.  
-Example: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml
+Example URL: https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml
 
 ## Inputs
 
 All inputs are optional.
 
-|  Input  | Default&nbsp;Value    | Description&nbsp;of&nbsp;Input |
-| :-----: | :-------------------- | :----------------------------- |
-|  file   | `.github/labels.yaml` | Configuration file path        |
-|   url   | -                     | Configuration file URL         |
-|  json   | -                     | Configuration JSON string      |
+| Input   | Default&nbsp;Value    | Description&nbsp;of&nbsp;Input |
+| :------ | :-------------------- | :----------------------------- |
+| file    | `.github/labels.yaml` | Configuration file path        |
+| url     | -                     | Configuration file URL         |
+| json    | -                     | Configuration JSON string      |
 | delete  | `false`               | Delete labels not in config    |
 | summary | `true`                | Add Summary to Job             |
 | dry-run | `false`               | Dry Run, only output results   |
-|  token  | `${{ github.token }}` | GitHub Access Token PAT [^1]   |
+| token   | `${{ github.token }}` | GitHub Access Token PAT [^1]   |
 
 This action is designed to work on the `pull_request_target` trigger.  
 Example workflow: [.github/workflows/labeler.yaml](https://github.com/cssnr/label-creator-action/blob/master/.github/workflows/labeler.yaml)
@@ -107,13 +114,14 @@ Permissions documentation for [Workflows](https://docs.github.com/en/actions/wri
 
 ## Outputs
 
-| Output  | Description    |
-| :------ | :------------- |
-| created | Labels Created |
-| updated | Labels Updated |
-| deleted | Labels Deleted |
+| Output  | Description&nbsp;of&nbsp;Output  |
+| :------ | :------------------------------- |
+| changed | `true` if any changes or `false` |
+| created | Labels Created JSON Array        |
+| updated | Labels Updated JSON Array        |
+| deleted | Labels Deleted JSON Array        |
 
-Note: These are JSON Arrays.
+Note: All outputs are Strings per GitHub Spec.
 
 ```yaml
 - name: 'Label Creator'
@@ -122,6 +130,7 @@ Note: These are JSON Arrays.
 
 - name: 'Echo Output'
   run: |
+    echo "changed: ${{ steps.label.outputs.changed }}"
     echo "created: ${{ steps.label.outputs.created }}"
     echo "updated: ${{ steps.label.outputs.updated }}"
     echo "deleted: ${{ steps.label.outputs.deleted }}"
@@ -270,16 +279,49 @@ Additionally, you can support other GitHub Actions I have published:
 - [VirusTotal Action](https://github.com/cssnr/virustotal-action?tab=readme-ov-file#readme)
 - [Mirror Repository Action](https://github.com/cssnr/mirror-repository-action?tab=readme-ov-file#readme)
 - [Update Version Tags Action](https://github.com/cssnr/update-version-tags-action?tab=readme-ov-file#readme)
+- [Docker Tags Action](https://github.com/cssnr/docker-tags-action?tab=readme-ov-file#readme)
 - [Update JSON Value Action](https://github.com/cssnr/update-json-value-action?tab=readme-ov-file#readme)
+- [JSON Key Value Check Action](https://github.com/cssnr/json-key-value-check-action?tab=readme-ov-file#readme)
 - [Parse Issue Form Action](https://github.com/cssnr/parse-issue-form-action?tab=readme-ov-file#readme)
 - [Cloudflare Purge Cache Action](https://github.com/cssnr/cloudflare-purge-cache-action?tab=readme-ov-file#readme)
 - [Mozilla Addon Update Action](https://github.com/cssnr/mozilla-addon-update-action?tab=readme-ov-file#readme)
-- [Docker Tags Action](https://github.com/cssnr/docker-tags-action?tab=readme-ov-file#readme)
 - [Package Changelog Action](https://github.com/cssnr/package-changelog-action?tab=readme-ov-file#readme)
 - [NPM Outdated Check Action](https://github.com/cssnr/npm-outdated-action?tab=readme-ov-file#readme)
 - [Label Creator Action](https://github.com/cssnr/label-creator-action?tab=readme-ov-file#readme)
 - [Algolia Crawler Action](https://github.com/cssnr/algolia-crawler-action?tab=readme-ov-file#readme)
 - [Upload Release Action](https://github.com/cssnr/upload-release-action?tab=readme-ov-file#readme)
+- [Check Build Action](https://github.com/cssnr/check-build-action?tab=readme-ov-file#readme)
+- [Web Request Action](https://github.com/cssnr/web-request-action?tab=readme-ov-file#readme)
+- [Get Commit Action](https://github.com/cssnr/get-commit-action?tab=readme-ov-file#readme)
+
+<details><summary>❔ Unpublished Actions</summary>
+
+These actions are not published on the Marketplace, but may be useful.
+
+- [cssnr/draft-release-action](https://github.com/cssnr/draft-release-action?tab=readme-ov-file#readme) - Keep a draft release ready to publish.
+- [cssnr/env-json-action](https://github.com/cssnr/env-json-action?tab=readme-ov-file#readme) - Convert env file to json or vice versa.
+- [cssnr/push-artifacts-action](https://github.com/cssnr/push-artifacts-action?tab=readme-ov-file#readme) - Sync files to a remote host with rsync.
+- [smashedr/update-release-notes-action](https://github.com/smashedr/update-release-notes-action?tab=readme-ov-file#readme) - Update release notes.
+- [smashedr/combine-release-notes-action](https://github.com/smashedr/combine-release-notes-action?tab=readme-ov-file#readme) - Combine release notes.
+
+---
+
+</details>
+
+<details><summary>📝 Template Actions</summary>
+
+These are basic action templates that I use for creating new actions.
+
+- [js-test-action](https://github.com/smashedr/js-test-action?tab=readme-ov-file#readme) - JavaScript
+- [py-test-action](https://github.com/smashedr/py-test-action?tab=readme-ov-file#readme) - Python
+- [ts-test-action](https://github.com/smashedr/ts-test-action?tab=readme-ov-file#readme) - TypeScript
+- [docker-test-action](https://github.com/smashedr/docker-test-action?tab=readme-ov-file#readme) - Docker Image
+
+Note: The `docker-test-action` builds, runs and pushes images to [GitHub Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry).
+
+---
+
+</details>
 
 For a full list of current projects visit: [https://cssnr.github.io/](https://cssnr.github.io/)
 

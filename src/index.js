@@ -9,13 +9,13 @@ const Api = require('./api')
     try {
         core.info(`🏳️ Starting Label Creator Action`)
 
-        // Debug
-        core.startGroup('Debug: github.context')
-        console.log(github.context)
-        core.endGroup() // Debug github.context
-        core.startGroup('Debug: process.env')
-        console.log(process.env)
-        core.endGroup() // Debug process.env
+        // // Debug
+        // core.startGroup('Debug: github.context')
+        // console.log(github.context)
+        // core.endGroup() // Debug github.context
+        // core.startGroup('Debug: process.env')
+        // console.log(process.env)
+        // core.endGroup() // Debug process.env
 
         // Inputs
         const inputs = getInputs()
@@ -87,19 +87,23 @@ const Api = require('./api')
                 const result = await api.deleteLabel(label)
                 console.log('result:', result)
                 deleted.push(label)
+                await new Promise((resolve) => setTimeout(resolve, 250))
             }
             core.endGroup() // Delete Labels
         }
 
+        const changed = created.length > 0 || updated.length > 0 || deleted.length > 0
+        console.log('changed:', changed)
         console.log('created:', created)
         console.log('updated:', updated)
         console.log('deleted:', deleted)
 
         // Outputs
         core.info('📩 Setting Outputs')
-        core.setOutput('created', JSON.stringify(created))
-        core.setOutput('updated', JSON.stringify(updated))
-        core.setOutput('deleted', JSON.stringify(deleted))
+        core.setOutput('changed', changed)
+        core.setOutput('created', created)
+        core.setOutput('updated', updated)
+        core.setOutput('deleted', deleted)
 
         // Summary
         if (inputs.summary) {
@@ -136,7 +140,6 @@ async function addSummary(inputs, config, created, updated, deleted) {
         core.summary.addRaw('⚠️ **Dry Run - No Changes Made!** ')
         core.summary.addRaw('Set `dry-run` to `false` to process changes.\n\n')
     }
-
     if (created.length) {
         core.summary.addRaw(`➕ Created ${created.length} Labels:\n`)
         core.summary.addCodeBlock(created.join('\n'), 'text')
@@ -201,9 +204,9 @@ async function getConfig(inputs, api) {
 /**
  * Get Inputs
  * @typedef {Object} Inputs
- * @property {String|undefined} file
- * @property {String|undefined} url
- * @property {String|undefined} json
+ * @property {String} file
+ * @property {String} url
+ * @property {String} json
  * @property {Boolean} delete
  * @property {Boolean} summary
  * @property {Boolean} dryRun
