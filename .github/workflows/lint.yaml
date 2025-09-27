@@ -74,6 +74,11 @@ jobs:
         if: ${{ !cancelled() }}
         uses: cssnr/check-build-action@master
 
+      - name: "Verify action.yml"
+        if: ${{ !cancelled() }}
+        run: |
+          yq -e '.runs.main | test("^dist/")' action.yml
+
       - name: "ESLint Annotate"
         if: ${{ !cancelled() && steps.eslint.outcome != 'success' }}
         continue-on-error: true
