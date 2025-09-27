@@ -29941,7 +29941,8 @@ class Api {
 
     /**
      * List Labels
-     * @return {Promise<Object[]|null>}
+     * https://docs.github.com/en/rest/issues/labels?apiVersion=2022-11-28#list-labels-for-a-repository
+     * @return {Promise<Object[]>} Label Data Object Array
      */
     async listLabels() {
         console.debug('listLabels')
@@ -29953,10 +29954,11 @@ class Api {
 
     /**
      * Create Label
+     * https://docs.github.com/en/rest/issues/labels?apiVersion=2022-11-28#create-a-label
      * @param {String} name
      * @param {String} color
      * @param {String} description
-     * @return {Promise<Object>}
+     * @return {Promise<Object>} Label Data Object
      */
     async createLabel(name, color, description) {
         console.debug(`createLabel: ${name} - ${color} - ${description}`)
@@ -29972,10 +29974,11 @@ class Api {
 
     /**
      * Update Label
+     * https://docs.github.com/en/rest/issues/labels?apiVersion=2022-11-28#update-a-label
      * @param {String} name
      * @param {String} color
      * @param {String} description
-     * @return {Promise<Object>}
+     * @return {Promise<Object>} Label Data Object
      */
     async updateLabel(name, color, description) {
         console.debug(`updateLabel: ${name} - ${color} - ${description}`)
@@ -30005,8 +30008,9 @@ class Api {
 
     /**
      * Get File Content
+     * https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
      * @param {String} path
-     * @return {Promise<String>}
+     * @return {Promise<String>} File Content String
      */
     async getContent(path) {
         console.debug('getContent:', path)
@@ -40559,13 +40563,13 @@ const Api = __nccwpck_require__(8793)
     try {
         core.info(`🏳️ Starting Label Creator Action`)
 
-        // Debug
-        core.startGroup('Debug: github.context')
-        console.log(github.context)
-        core.endGroup() // Debug github.context
-        core.startGroup('Debug: process.env')
-        console.log(process.env)
-        core.endGroup() // Debug process.env
+        // // Debug
+        // core.startGroup('Debug: github.context')
+        // console.log(github.context)
+        // core.endGroup() // Debug github.context
+        // core.startGroup('Debug: process.env')
+        // console.log(process.env)
+        // core.endGroup() // Debug process.env
 
         // Inputs
         const inputs = getInputs()
@@ -40637,19 +40641,23 @@ const Api = __nccwpck_require__(8793)
                 const result = await api.deleteLabel(label)
                 console.log('result:', result)
                 deleted.push(label)
+                await new Promise((resolve) => setTimeout(resolve, 250))
             }
             core.endGroup() // Delete Labels
         }
 
+        const changed = created.length > 0 || updated.length > 0 || deleted.length > 0
+        console.log('changed:', changed)
         console.log('created:', created)
         console.log('updated:', updated)
         console.log('deleted:', deleted)
 
         // Outputs
         core.info('📩 Setting Outputs')
-        core.setOutput('created', JSON.stringify(created))
-        core.setOutput('updated', JSON.stringify(updated))
-        core.setOutput('deleted', JSON.stringify(deleted))
+        core.setOutput('changed', changed)
+        core.setOutput('created', created)
+        core.setOutput('updated', updated)
+        core.setOutput('deleted', deleted)
 
         // Summary
         if (inputs.summary) {
@@ -40686,7 +40694,6 @@ async function addSummary(inputs, config, created, updated, deleted) {
         core.summary.addRaw('⚠️ **Dry Run - No Changes Made!** ')
         core.summary.addRaw('Set `dry-run` to `false` to process changes.\n\n')
     }
-
     if (created.length) {
         core.summary.addRaw(`➕ Created ${created.length} Labels:\n`)
         core.summary.addCodeBlock(created.join('\n'), 'text')
@@ -40751,9 +40758,9 @@ async function getConfig(inputs, api) {
 /**
  * Get Inputs
  * @typedef {Object} Inputs
- * @property {String|undefined} file
- * @property {String|undefined} url
- * @property {String|undefined} json
+ * @property {String} file
+ * @property {String} url
+ * @property {String} json
  * @property {Boolean} delete
  * @property {Boolean} summary
  * @property {Boolean} dryRun

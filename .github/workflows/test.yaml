@@ -37,11 +37,19 @@ jobs:
           cat "${GITHUB_EVENT_PATH}"
 
       - name: "1 - Test File"
+        id: test1
         uses: ./
         with:
           file: ".github/labels.yaml"
           delete: true
           dry-run: true
+
+      - name: "1 - Echo Outputs"
+        run: |
+          echo "changed: ${{ steps.test1.outputs.changed }}"
+          echo "created: ${{ steps.test1.outputs.created }}"
+          echo "updated: ${{ steps.test1.outputs.updated }}"
+          echo "deleted: ${{ steps.test1.outputs.deleted }}"
 
       - name: "Delete Local File"
         if: ${{ !github.event.act }}
