@@ -8,7 +8,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=cssnr_label-creator-action&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=cssnr_label-creator-action)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/label-creator-action?logo=github&label=updated)](https://github.com/cssnr/label-creator-action/pulse)
 [![Codeberg Last Commit](https://img.shields.io/gitea/last-commit/cssnr/label-creator-action/master?gitea_url=https%3A%2F%2Fcodeberg.org%2F&logo=codeberg&logoColor=white&label=updated)](https://codeberg.org/cssnr/label-creator-action)
-[![GitHub Contributors](https://img.shields.io/github/contributors/cssnr/label-creator-action?logo=github)](https://github.com/cssnr/label-creator-action/graphs/contributors)
+[![GitHub Contributors](https://img.shields.io/github/contributors-anon/cssnr/label-creator-action?logo=github)](https://github.com/cssnr/label-creator-action/graphs/contributors)
 [![GitHub Repo Size](https://img.shields.io/github/repo-size/cssnr/label-creator-action?logo=bookstack&logoColor=white&label=repo%20size)](https://github.com/cssnr/label-creator-action?tab=readme-ov-file#readme)
 [![GitHub Top Language](https://img.shields.io/github/languages/top/cssnr/label-creator-action?logo=htmx)](https://github.com/cssnr/label-creator-action)
 [![GitHub Discussions](https://img.shields.io/github/discussions/cssnr/label-creator-action?logo=github)](https://github.com/cssnr/label-creator-action/discussions)
@@ -89,7 +89,7 @@ All inputs are optional.
 | delete  | `false`               | Delete labels not in config    |
 | summary | `true`                | Add Summary to Job             |
 | dry-run | `false`               | Dry Run, only output results   |
-| token   | `${{ github.token }}` | GitHub Access Token PAT [^1]   |
+| token   | `github.token`        | GitHub Access Token PAT [^1]   |
 
 This action is designed to work on the `pull_request_target` trigger.  
 Example workflow: [.github/workflows/labeler.yaml](https://github.com/cssnr/label-creator-action/blob/master/.github/workflows/labeler.yaml)
@@ -275,7 +275,8 @@ If you would like to submit a PR, please review the [CONTRIBUTING.md](#contribut
 Additionally, you can support other GitHub Actions I have published:
 
 - [Stack Deploy Action](https://github.com/cssnr/stack-deploy-action?tab=readme-ov-file#readme)
-- [Portainer Stack Deploy](https://github.com/cssnr/portainer-stack-deploy-action?tab=readme-ov-file#readme)
+- [Portainer Stack Deploy Action](https://github.com/cssnr/portainer-stack-deploy-action?tab=readme-ov-file#readme)
+- [Docker Context Action](https://github.com/cssnr/docker-context-action?tab=readme-ov-file#readme)
 - [VirusTotal Action](https://github.com/cssnr/virustotal-action?tab=readme-ov-file#readme)
 - [Mirror Repository Action](https://github.com/cssnr/mirror-repository-action?tab=readme-ov-file#readme)
 - [Update Version Tags Action](https://github.com/cssnr/update-version-tags-action?tab=readme-ov-file#readme)

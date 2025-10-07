@@ -7,11 +7,11 @@ on:
   push:
     branches: ["**"]
     paths:
+      - ".github/workflows/test.yaml"
       - "dist/**"
       - "src/**"
       - "package*.json"
       - "requirements*.txt"
-      - ".github/workflows/test.yaml"
       - "action.yml"
 
 concurrency:
@@ -23,6 +23,7 @@ jobs:
     name: "Test"
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
     permissions:
       pull-requests: write
 
