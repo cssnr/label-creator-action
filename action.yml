@@ -1,5 +1,5 @@
 name: "Label Creator"
-description: "Automatically Create or Update Labels to ensure they exist and are synchronized using a centralized configuration file."
+description: "Automatically Create or Update Labels to ensure they exist and are synchronized using a centralized configuration file." # yamllint disable-line rule:line-length
 author: "Shane"
 branding:
   icon: "tag"

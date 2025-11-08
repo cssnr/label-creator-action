@@ -95,10 +95,10 @@ jobs:
           #    "documentation": {"color": "0075ca", "description": "Documentation updates"}
           #  }
           data: |
-            workflows: 
+            workflows:
               color: ffffff
               description: Workflows modification
-            source: 
+            source:
               color: fbca04
               description: Source modification
             documentation:

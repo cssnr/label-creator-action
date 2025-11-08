@@ -191,10 +191,10 @@ With an inline YAML string.
   uses: cssnr/label-creator-action@v1
   with:
     data: |
-      workflows: 
+      workflows:
         color: ffffff
         description: Workflows modification
-      source: 
+      source:
         color: fbca04
         description: Source modification
       documentation:
