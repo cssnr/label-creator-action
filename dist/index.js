@@ -40731,17 +40731,17 @@ async function getConfig(inputs, api) {
         const response = await fetch(inputs.url)
         if (!response.ok) throw new Error(response.statusText)
         const text = await response.text()
-        return YAML.parse(text)
+        return parseData(text)
     } else if (inputs.file) {
         console.log('Processing File:', inputs.file)
         if (fs.existsSync(inputs.file)) {
             console.log('Local file found, reading file content.')
-            const file = fs.readFileSync(inputs.file, 'utf8')
-            return YAML.parse(file)
+            const text = fs.readFileSync(inputs.file, 'utf8')
+            return parseData(text)
         } else {
             console.log('File not found, get content from API.')
             const text = await api.getContent(inputs.file)
-            return YAML.parse(text)
+            return parseData(text)
         }
     }
 }
