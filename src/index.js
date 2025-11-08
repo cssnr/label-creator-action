@@ -27,7 +27,7 @@ async function main() /* NOSONAR */ {
     let config = await getConfig(inputs, api)
     console.log('config:', config)
     if (!config) {
-        core.error('Must provide a file, url, or json input.')
+        core.error('Must provide a file, url, or data input.')
         core.setFailed('No configuration file found.')
         return
     }
@@ -168,9 +168,9 @@ async function addSummary(inputs, config, created, updated, deleted) {
  * @return {object}
  */
 async function getConfig(inputs, api) {
-    if (inputs.json) {
-        console.log('Processing JSON:', inputs.json)
-        return JSON.parse(inputs.json)
+    if (inputs.data) {
+        console.log('Processing DATA:', inputs.data)
+        return parseData(inputs.data)
     } else if (inputs.url) {
         console.log('Processing URL:', inputs.url)
         const response = await fetch(inputs.url)
@@ -192,11 +192,35 @@ async function getConfig(inputs, api) {
 }
 
 /**
+ * Parse Data from Input
+ * @param {string} data
+ * @return {object}
+ */
+function parseData(data) {
+    core.debug(`parseData: ${typeof data}: ${data}`)
+    // console.log(`parseData: ${typeof data}: ${data}`)
+    if (!data) return {}
+    try {
+        return JSON.parse(data)
+    } catch (e) {
+        core.debug(`JSON.parse failed: ${e.message}`)
+        // console.log(`JSON.parse failed: ${e.message}`)
+    }
+    try {
+        return YAML.parse(data)
+    } catch (e) {
+        core.debug(`YAML.parse failed: ${e.message}`)
+        // console.log(`YAML.parse failed: ${e.message}`)
+    }
+    throw new Error(`Unable to parse data: ${data}`)
+}
+
+/**
  * Get Inputs
  * @typedef {object} Inputs
  * @property {string} file
  * @property {string} url
- * @property {string} json
+ * @property {string} data
  * @property {boolean} delete
  * @property {boolean} summary
  * @property {boolean} dryRun
@@ -207,7 +231,7 @@ function getInputs() {
     return {
         file: core.getInput('file'),
         url: core.getInput('url'),
-        json: core.getInput('json'),
+        data: core.getInput('data') || core.getInput('json'),
         delete: core.getBooleanInput('delete'),
         summary: core.getBooleanInput('summary'),
         dryRun: core.getBooleanInput('dry-run'),

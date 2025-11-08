@@ -47,6 +47,7 @@ jobs:
           env
 
       - name: "1 - Test File"
+        #if: ${{ !github.event.act }}
         id: test1
         uses: ./
         with:
@@ -55,6 +56,7 @@ jobs:
           dry-run: true
 
       - name: "1 - Echo Outputs"
+        #if: ${{ !github.event.act }}
         run: |
           echo "changed: ${{ steps.test1.outputs.changed }}"
           echo "created: ${{ steps.test1.outputs.created }}"
@@ -82,12 +84,26 @@ jobs:
         uses: ./
         with:
           file: "https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml"
-          json: |
-            {
-              "workflows": {"color": "ffffff", "description": "Workflows modification"},
-              "source": {"color": "fbca04", "description": "Source modification"},
-              "documentation": {"color": "0075ca", "description": "Documentation updates"}
-            }
+          #data: |
+          #  workflows: {"color": "ffffff", "description": "Workflows modification"}
+          #  source: {"color": "fbca04", "description": "Source modification"}
+          #  documentation: {"color": "0075ca", "description": "Documentation updates"}
+          #data: |
+          #  {
+          #    "workflows": {"color": "ffffff", "description": "Workflows modification"},
+          #    "source": {"color": "fbca04", "description": "Source modification"},
+          #    "documentation": {"color": "0075ca", "description": "Documentation updates"}
+          #  }
+          data: |
+            workflows: 
+              color: ffffff
+              description: Workflows modification
+            source: 
+              color: fbca04
+              description: Source modification
+            documentation:
+              color: 0075ca
+              description: Documentation updates
 
       #- name: "Schedule Failure Notification"
       #  if: ${{ failure() && github.event_name == 'schedule' }}

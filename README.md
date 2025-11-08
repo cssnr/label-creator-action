@@ -85,7 +85,7 @@ All inputs are optional.
 | :------ | :-------------------- | :----------------------------- |
 | file    | `.github/labels.yaml` | Configuration file path        |
 | url     | -                     | Configuration file URL         |
-| json    | -                     | Configuration JSON string      |
+| data    | -                     | Configuration JSON/YAML string |
 | delete  | `false`               | Delete labels not in config    |
 | summary | `true`                | Add Summary to Job             |
 | dry-run | `false`               | Dry Run, only output results   |

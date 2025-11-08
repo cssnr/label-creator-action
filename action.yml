@@ -13,8 +13,12 @@ inputs:
   url:
     description: "Configuration file URL"
     required: false
+  data:
+    description: "Configuration JSON/YAML string"
+    required: false
   json:
-    description: "Configuration JSON string"
+    deprecationMessage: "This input has changed too: data"
+    description: "Configuration JSON/YAML string"
     required: false
   delete:
     description: "Delete labels not in config"
