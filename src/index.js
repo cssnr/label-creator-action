@@ -5,132 +5,122 @@ const YAML = require('yaml')
 
 const Api = require('./api')
 
-;(async () => {
-    try {
-        core.info(`🏳️ Starting Label Creator Action`)
+async function main() /* NOSONAR */ {
+    core.info(`🏳️ Starting Label Creator Action`)
 
-        // // Debug
-        // core.startGroup('Debug: github.context')
-        // console.log(github.context)
-        // core.endGroup() // Debug github.context
-        // core.startGroup('Debug: process.env')
-        // console.log(process.env)
-        // core.endGroup() // Debug process.env
+    // // Debug
+    // core.startGroup('Debug: github.context')
+    // console.log(github.context)
+    // core.endGroup() // Debug github.context
+    // core.startGroup('Debug: process.env')
+    // console.log(process.env)
+    // core.endGroup() // Debug process.env
 
-        // Inputs
-        const inputs = getInputs()
-        core.startGroup('Inputs')
-        console.log(inputs)
-        core.endGroup() // Inputs
+    // Inputs
+    const inputs = getInputs()
+    core.startGroup('Inputs')
+    console.log(inputs)
+    core.endGroup() // Inputs
 
-        // Config
-        const api = new Api(inputs.token, inputs.dryRun)
-        let config = await getConfig(inputs, api)
-        console.log('config:', config)
-        if (!config) {
-            core.error('Must provide a file, url, or json input.')
-            core.setFailed('No configuration file found.')
-            return
-        }
-
-        // Labels
-        core.startGroup('Labels')
-        console.log('github.context.repo:', github.context.repo)
-        const labels = await api.listLabels()
-        console.log('labels.length:', labels.length)
-        console.log(labels)
-        core.endGroup() // Labels
-
-        const created = []
-        const updated = []
-        const deleted = []
-
-        // Process Labels
-        core.startGroup('Process Labels')
-        for (const [name, data] of Object.entries(config)) {
-            console.log(`-- Processing -- ${name}`, data)
-            // console.log(`${name} - ${data.color} - ${data.description}`)
-            const label = labels.find((obj) => obj.name === name)
-            console.log('Current label:', label)
-            if (label) {
-                if (
-                    (data.color && data.color !== label.color) ||
-                    (data.description && data.description !== label.description)
-                ) {
-                    console.log(`! ! ! Update - ${name}`)
-                    const result = await api.updateLabel(
-                        name,
-                        data.color,
-                        data.description
-                    )
-                    console.log('result:', result)
-                    updated.push(name)
-                }
-            } else {
-                console.log(`+ + + Create - ${name}`)
-                const result = await api.createLabel(name, data.color, data.description)
-                console.log('result:', result)
-                created.push(name)
-            }
-        }
-        core.endGroup() // Process Labels
-
-        // Delete Labels
-        if (inputs.delete) {
-            core.startGroup('Delete Labels')
-            const keys = new Set(Object.keys(config).map((k) => k.toLowerCase()))
-            const toDelete = labels
-                .filter((label) => !keys.has(label.name.toLowerCase()))
-                .map((label) => label.name)
-            console.log('toDelete:', toDelete)
-            for (const label of toDelete) {
-                const result = await api.deleteLabel(label)
-                console.log('result:', result)
-                deleted.push(label)
-                await new Promise((resolve) => setTimeout(resolve, 250))
-            }
-            core.endGroup() // Delete Labels
-        }
-
-        const changed = created.length > 0 || updated.length > 0 || deleted.length > 0
-        console.log('changed:', changed)
-        console.log('created:', created)
-        console.log('updated:', updated)
-        console.log('deleted:', deleted)
-
-        // Outputs
-        core.info('📩 Setting Outputs')
-        core.setOutput('changed', changed)
-        core.setOutput('created', created)
-        core.setOutput('updated', updated)
-        core.setOutput('deleted', deleted)
-
-        // Summary
-        if (inputs.summary) {
-            core.info('📝 Writing Job Summary')
-            try {
-                await addSummary(inputs, config, created, updated, deleted)
-            } catch (e) {
-                console.log(e)
-                core.error(`Error writing Job Summary ${e.message}`)
-            }
-        }
-
-        core.info(`✅ \u001b[32;1mFinished Success`)
-    } catch (e) {
-        core.debug(e)
-        core.info(e.message)
-        core.setFailed(e.message)
+    // Config
+    const api = new Api(inputs.token, inputs.dryRun)
+    let config = await getConfig(inputs, api)
+    console.log('config:', config)
+    if (!config) {
+        core.error('Must provide a file, url, or json input.')
+        core.setFailed('No configuration file found.')
+        return
     }
-})()
+
+    // Labels
+    core.startGroup('Labels')
+    console.log('github.context.repo:', github.context.repo)
+    const labels = await api.listLabels()
+    console.log('labels.length:', labels.length)
+    console.log(labels)
+    core.endGroup() // Labels
+
+    const created = []
+    const updated = []
+    const deleted = []
+
+    // Process Labels
+    core.startGroup('Process Labels')
+    for (const [name, data] of Object.entries(config)) {
+        console.log(`-- Processing -- ${name}`, data)
+        // console.log(`${name} - ${data.color} - ${data.description}`)
+        const label = labels.find((obj) => obj.name === name)
+        console.log('Current label:', label)
+        if (label) {
+            if (
+                (data.color && data.color !== label.color) ||
+                (data.description && data.description !== label.description)
+            ) {
+                console.log(`! ! ! Update - ${name}`)
+                const result = await api.updateLabel(name, data.color, data.description)
+                console.log('result:', result)
+                updated.push(name)
+            }
+        } else {
+            console.log(`+ + + Create - ${name}`)
+            const result = await api.createLabel(name, data.color, data.description)
+            console.log('result:', result)
+            created.push(name)
+        }
+    }
+    core.endGroup() // Process Labels
+
+    // Delete Labels
+    if (inputs.delete) {
+        core.startGroup('Delete Labels')
+        const keys = new Set(Object.keys(config).map((k) => k.toLowerCase()))
+        const toDelete = labels
+            .filter((label) => !keys.has(label.name.toLowerCase()))
+            .map((label) => label.name)
+        console.log('toDelete:', toDelete)
+        for (const label of toDelete) {
+            const result = await api.deleteLabel(label)
+            console.log('result:', result)
+            deleted.push(label)
+            await new Promise((resolve) => setTimeout(resolve, 250))
+        }
+        core.endGroup() // Delete Labels
+    }
+
+    const changed = created.length > 0 || updated.length > 0 || deleted.length > 0
+    console.log('changed:', changed)
+    console.log('created:', created)
+    console.log('updated:', updated)
+    console.log('deleted:', deleted)
+
+    // Outputs
+    core.info('📩 Setting Outputs')
+    core.setOutput('changed', changed)
+    core.setOutput('created', created)
+    core.setOutput('updated', updated)
+    core.setOutput('deleted', deleted)
+
+    // Summary
+    if (inputs.summary) {
+        core.info('📝 Writing Job Summary')
+        try {
+            await addSummary(inputs, config, created, updated, deleted)
+        } catch (e) {
+            console.log(e)
+            core.error(`Error writing Job Summary ${e.message}`)
+        }
+    }
+
+    core.info(`✅ \u001b[32;1mFinished Success`)
+}
 
 /**
  * Add Summary
  * @param {Inputs} inputs
- * @param {Object} config
- * @param {String[]} created
- * @param {String[]} updated
- * @param {String[]} deleted
+ * @param {object} config
+ * @param {string[]} created
+ * @param {string[]} updated
+ * @param {string[]} deleted
  * @return {Promise<void>}
  */
 async function addSummary(inputs, config, created, updated, deleted) {
@@ -175,7 +165,7 @@ async function addSummary(inputs, config, created, updated, deleted) {
  * Get Config
  * @param {Inputs} inputs
  * @param {Api} api
- * @return {Object}
+ * @return {object}
  */
 async function getConfig(inputs, api) {
     if (inputs.json) {
@@ -203,14 +193,14 @@ async function getConfig(inputs, api) {
 
 /**
  * Get Inputs
- * @typedef {Object} Inputs
- * @property {String} file
- * @property {String} url
- * @property {String} json
- * @property {Boolean} delete
- * @property {Boolean} summary
- * @property {Boolean} dryRun
- * @property {String} token
+ * @typedef {object} Inputs
+ * @property {string} file
+ * @property {string} url
+ * @property {string} json
+ * @property {boolean} delete
+ * @property {boolean} summary
+ * @property {boolean} dryRun
+ * @property {string} token
  * @return {Inputs}
  */
 function getInputs() {
@@ -224,3 +214,9 @@ function getInputs() {
         token: core.getInput('token', { required: true }),
     }
 }
+
+main().catch((e) => {
+    core.debug(e)
+    core.info(e.message)
+    core.setFailed(e.message)
+})

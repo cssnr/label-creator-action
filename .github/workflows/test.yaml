@@ -1,5 +1,7 @@
 name: "Test"
 
+# actions-up-ignore-file
+
 on:
   workflow_dispatch:
   #schedule:
@@ -31,11 +33,18 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v5
 
-      - name: "Debug event.json"
+      - name: "Debug CTX github"
+        if: ${{ !github.event.act }}
+        continue-on-error: true
+        env:
+          GITHUB_CTX: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CTX"
+
+      - name: "Debug Environment"
         if: ${{ !github.event.act }}
         continue-on-error: true
         run: |
-          cat "${GITHUB_EVENT_PATH}"
+          env
 
       - name: "1 - Test File"
         id: test1
@@ -80,8 +89,8 @@ jobs:
               "documentation": {"color": "0075ca", "description": "Documentation updates"}
             }
 
-      - name: "Schedule Failure Notification"
-        if: ${{ failure() && github.event_name == 'schedule' }}
-        uses: sarisia/actions-status-discord@v1
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+      #- name: "Schedule Failure Notification"
+      #  if: ${{ failure() && github.event_name == 'schedule' }}
+      #  uses: sarisia/actions-status-discord@v1
+      #  with:
+      #    webhook: ${{ secrets.DISCORD_WEBHOOK }}

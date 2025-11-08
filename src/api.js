@@ -3,8 +3,8 @@ const github = require('@actions/github')
 class Api {
     /**
      * GitHub Api
-     * @param {String} token
-     * @param {Boolean} dryRun
+     * @param {string} token
+     * @param {boolean} dryRun
      */
     constructor(token, dryRun = false) {
         this.dryRun = dryRun
@@ -28,10 +28,10 @@ class Api {
     /**
      * Create Label
      * https://docs.github.com/en/rest/issues/labels?apiVersion=2022-11-28#create-a-label
-     * @param {String} name
-     * @param {String} color
-     * @param {String} description
-     * @return {Promise<Object>} Label Data Object
+     * @param {string} name
+     * @param {string} color
+     * @param {string} description
+     * @return {Promise<object>} Label Data Object
      */
     async createLabel(name, color, description) {
         console.debug(`createLabel: ${name} - ${color} - ${description}`)
@@ -48,10 +48,10 @@ class Api {
     /**
      * Update Label
      * https://docs.github.com/en/rest/issues/labels?apiVersion=2022-11-28#update-a-label
-     * @param {String} name
-     * @param {String} color
-     * @param {String} description
-     * @return {Promise<Object>} Label Data Object
+     * @param {string} name
+     * @param {string} color
+     * @param {string} description
+     * @return {Promise<object>} Label Data Object
      */
     async updateLabel(name, color, description) {
         console.debug(`updateLabel: ${name} - ${color} - ${description}`)
@@ -68,7 +68,7 @@ class Api {
     /**
      * Delete Label
      * @param {String} name
-     * @return {Promise<InstanceType<typeof github.GitHub>|Undefined>}
+     * @return {Promise<InstanceType<typeof github.GitHub>|undefined>}
      */
     async deleteLabel(name) {
         console.debug(`deleteLabel: ${name}`)
@@ -82,11 +82,12 @@ class Api {
     /**
      * Get File Content
      * https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#get-repository-content
-     * @param {String} path
-     * @return {Promise<String>} File Content String
+     * @param {string} path
+     * @return {Promise<string>} File Content String
      */
     async getContent(path) {
         console.debug('getContent:', path)
+        /** @type {object} */
         const response = await this.octokit.rest.repos.getContent({
             ...this.repo,
             path: path,
