@@ -50,11 +50,11 @@ Which checks out these centralized configs: [https://github.com/cssnr/configs](h
 ## Features
 
 - Keep Labels up-to-date on every workflow run.
-- Use a [centralized configuration](#Configuration) local or remote file, or inline JSON.
+- Use a [centralized configuration](#Configuration) local or remote file or inline JSON or YAML.
 
 ## Configuration
 
-The configuration file can be remote file, local file, or inline JSON string.
+The configuration file can be remote file, local file, or inline JSON or YAML string.
 In all cases the same format is used.
 
 ```yaml
@@ -164,12 +164,42 @@ With an inline JSON string.
 - name: 'Label Creator'
   uses: cssnr/label-creator-action@v1
   with:
-    json: |
+    data: |
       {
         "workflows": {"color": "ffffff", "description": "Workflows modification"},
         "documentation": {"color": "0075ca", "description": "Documentation updates"},
         "source": {"color": "fbca04", "description": "Source modification"}
       }
+```
+
+With an inline YAML + JSON string
+
+```yaml
+- name: 'Label Creator'
+  uses: cssnr/label-creator-action@v1
+  with:
+    data: |
+      workflows: {"color": "ffffff", "description": "Workflows modification"}
+      source: {"color": "fbca04", "description": "Source modification"}
+      documentation: {"color": "0075ca", "description": "Documentation updates"}
+```
+
+With an inline YAML string.
+
+```yaml
+- name: 'Label Creator'
+  uses: cssnr/label-creator-action@v1
+  with:
+    data: |
+      workflows: 
+        color: ffffff
+        description: Workflows modification
+      source: 
+        color: fbca04
+        description: Source modification
+      documentation:
+        color: 0075ca
+        description: Documentation updates
 ```
 
 <details><summary>Full Workflow</summary>
