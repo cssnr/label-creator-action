@@ -79,7 +79,7 @@ jobs:
         with:
           url: "https://raw.githubusercontent.com/cssnr/label-creator-action/refs/heads/master/.github/labels.yaml"
 
-      - name: "4 - Test JSON"
+      - name: "4 - Test YAML"
         if: ${{ !github.event.act }}
         uses: ./
         with:
