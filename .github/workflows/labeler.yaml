@@ -37,7 +37,7 @@ jobs:
 
       - name: "Label Creator"
         continue-on-error: true
-        uses: cssnr/label-creator-action@v1
+        uses: cssnr/label-creator-action@latest
         with:
           file: .configs/labels/labels.yaml
 
