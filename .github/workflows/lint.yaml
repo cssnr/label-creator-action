@@ -19,6 +19,8 @@ jobs:
 
     permissions:
       pull-requests: write
+      statuses: write
+      checks: write
 
     steps:
       - name: "Checkout"

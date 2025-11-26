@@ -1,12 +1,15 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
 const fs = require('node:fs')
-const YAML = require('yaml')
+const { parse, stringify } = require('yaml')
 
 const Api = require('./api')
 
 async function main() /* NOSONAR */ {
-    core.info(`🏳️ Starting Label Creator Action`)
+    const version = process.env.GITHUB_ACTION_REF
+        ? `\u001b[35;1m${process.env.GITHUB_ACTION_REF}`
+        : '\u001b[33;1mSource'
+    core.info(`🏳️ Starting Label Creator Action - ${version}`)
 
     // // Debug
     // core.startGroup('Debug: github.context')
@@ -147,12 +150,12 @@ async function addSummary(inputs, config, created, updated, deleted) {
     }
 
     core.summary.addRaw('<details><summary>Configuration</summary>')
-    core.summary.addCodeBlock(YAML.stringify(config), 'yaml')
+    core.summary.addCodeBlock(stringify(config), 'yaml')
     core.summary.addRaw('</details>\n')
 
     delete inputs.token
     core.summary.addRaw('<details><summary>Inputs</summary>')
-    core.summary.addCodeBlock(YAML.stringify(inputs), 'yaml')
+    core.summary.addCodeBlock(stringify(inputs), 'yaml')
     core.summary.addRaw('</details>\n')
 
     const text = 'View Documentation, Report Issues or Request Features'
@@ -207,7 +210,7 @@ function parseData(data) {
         // console.log(`JSON.parse failed: ${e.message}`)
     }
     try {
-        return YAML.parse(data)
+        return parse(data)
     } catch (e) {
         core.debug(`YAML.parse failed: ${e.message}`)
         // console.log(`YAML.parse failed: ${e.message}`)

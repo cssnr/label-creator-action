@@ -29945,7 +29945,7 @@ class Api {
      * @return {Promise<Object[]>} Label Data Object Array
      */
     async listLabels() {
-        console.debug('listLabels')
+        console.log('listLabels')
         const response = await this.octokit.rest.issues.listLabelsForRepo({
             ...this.repo,
         })
@@ -29961,7 +29961,7 @@ class Api {
      * @return {Promise<object>} Label Data Object
      */
     async createLabel(name, color, description) {
-        console.debug(`createLabel: ${name} - ${color} - ${description}`)
+        console.log(`createLabel: ${name} - ${color} - ${description}`)
         if (this.dryRun) return 'Dry Run'
         const response = await this.octokit.rest.issues.createLabel({
             ...this.repo,
@@ -29981,7 +29981,7 @@ class Api {
      * @return {Promise<object>} Label Data Object
      */
     async updateLabel(name, color, description) {
-        console.debug(`updateLabel: ${name} - ${color} - ${description}`)
+        console.log(`updateLabel: ${name} - ${color} - ${description}`)
         if (this.dryRun) return 'Dry Run'
         const response = await this.octokit.rest.issues.updateLabel({
             ...this.repo,
@@ -29998,7 +29998,7 @@ class Api {
      * @return {Promise<InstanceType<typeof github.GitHub>|undefined>}
      */
     async deleteLabel(name) {
-        console.debug(`deleteLabel: ${name}`)
+        console.log(`deleteLabel: ${name}`)
         if (this.dryRun) return 'Dry Run'
         return await this.octokit.rest.issues.deleteLabel({
             ...this.repo,
@@ -30013,15 +30013,17 @@ class Api {
      * @return {Promise<string>} File Content String
      */
     async getContent(path) {
-        console.debug('getContent:', path)
+        console.log(`getContent: ${path}`)
         /** @type {object} */
         const response = await this.octokit.rest.repos.getContent({
             ...this.repo,
             path: path,
-            // ref: github.context.sha,
+            ref: github.context.ref,
+            mediaType: { format: 'raw' },
         })
-        // console.debug('response:', response)
-        return Buffer.from(response.data.content, response.data.encoding).toString()
+        // console.log('response:', response)
+        // return Buffer.from(response.data.content, response.data.encoding).toString()
+        return response.data
     }
 }
 
@@ -40556,12 +40558,15 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(7484)
 const github = __nccwpck_require__(3228)
 const fs = __nccwpck_require__(3024)
-const YAML = __nccwpck_require__(8815)
+const { parse, stringify } = __nccwpck_require__(8815)
 
 const Api = __nccwpck_require__(8793)
 
 async function main() /* NOSONAR */ {
-    core.info(`🏳️ Starting Label Creator Action`)
+    const version = process.env.GITHUB_ACTION_REF
+        ? `\u001b[35;1m${process.env.GITHUB_ACTION_REF}`
+        : '\u001b[33;1mSource'
+    core.info(`🏳️ Starting Label Creator Action - ${version}`)
 
     // // Debug
     // core.startGroup('Debug: github.context')
@@ -40702,12 +40707,12 @@ async function addSummary(inputs, config, created, updated, deleted) {
     }
 
     core.summary.addRaw('<details><summary>Configuration</summary>')
-    core.summary.addCodeBlock(YAML.stringify(config), 'yaml')
+    core.summary.addCodeBlock(stringify(config), 'yaml')
     core.summary.addRaw('</details>\n')
 
     delete inputs.token
     core.summary.addRaw('<details><summary>Inputs</summary>')
-    core.summary.addCodeBlock(YAML.stringify(inputs), 'yaml')
+    core.summary.addCodeBlock(stringify(inputs), 'yaml')
     core.summary.addRaw('</details>\n')
 
     const text = 'View Documentation, Report Issues or Request Features'
@@ -40762,7 +40767,7 @@ function parseData(data) {
         // console.log(`JSON.parse failed: ${e.message}`)
     }
     try {
-        return YAML.parse(data)
+        return parse(data)
     } catch (e) {
         core.debug(`YAML.parse failed: ${e.message}`)
         // console.log(`YAML.parse failed: ${e.message}`)
