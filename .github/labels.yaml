@@ -9,7 +9,3 @@ documentation:
 source:
   color: fbca04
   description: Source modification
-
-testing:
-  color: aa4a44
-  description: Testing ONLY
