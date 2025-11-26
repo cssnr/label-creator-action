@@ -15,6 +15,7 @@ on:
       - "package*.json"
       - "requirements*.txt"
       - "action.yml"
+      - ".github/labels.yaml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
